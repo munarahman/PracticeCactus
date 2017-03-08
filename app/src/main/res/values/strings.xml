@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">PracticeCactus</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_login">Sign in</string>
+
+    <!--Main Menu Strings-->
+    <string name="community">Community</string>
+    <string name="progress">Progress</string>
+    <string name="logout">Logout</string>
+    <string name="menu_profile">settings</string>
+    <string name="change_password">Change Password</string>
+
+
+    <!-- Strings related to login -->
+    <string name="settings_submit">Save</string>
+    <string name="settings_cancel">Cancel</string>
+    <string name="settings_save_successful">Saved</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="sign_up"><u>Sign Up</u></string>
+    <string name="ok">OK</string>
+    <string name="not_enrolled">Sorry, you have not been enrolled by your teacher yet.</string>
+    <string name="not_student">This is currently the student portal only. Please visit URL for
+        the teacher portal.</string>
+
+    <!-- Internet connectivity -->
+    <string name="not_connected">No internet connection</string>
+    <string name="offline_recordings">No internet connection. The audio recording has been saved and will be sent later.</string>
+    <string name="change_password_success">Successfully changed password.</string>
+
+    <string name="shared_preferences_user">com.practicecactus.user</string>
+    <string name="title_activity_practice_list">PracticeListActivity</string>
+    <string name="title_activity_community">CommunityActivity</string>
+
+
+    <!--Settings Strings-->
+    <string name="change_password_link"><u>Change Password</u></string>
+    <string name="version_code">Version Code:</string>
+
+</resources>

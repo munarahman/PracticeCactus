@@ -1,0 +1,11 @@
+{
+  "name": "practicecactus-web",
+  "version": "0.0.1",
+  "description": "practicecactus-web",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "connect": "^3.4.1",
+    "express": "4.10.2",
+    "sqlite3": "^3.1.1"
+  }
+}

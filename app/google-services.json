@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "21515556793",
+    "project_id": "practice-cactus"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21515556793:android:768c332b8ea9b473",
+        "android_client_info": {
+          "package_name": "com.practicecactus.practicecactus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFm5m2vnwlu-tAbzj3gejzR0Hh2LQnohM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-89933714-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

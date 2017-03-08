@@ -1,0 +1,105 @@
+<html ng-app="teacherApp" ng-controller="teacherAppCtrl">
+	<head>
+        <link rel="stylesheet" type="text/css" href="css/mystyle.css">
+	</head>
+	<body>
+        <!-- Login View -->
+        <div ng-show = "login_view" id="login-view" class="full-dim background">
+            <img src="img/logo.png">
+            <div id="teacherlogin" class="box">
+                <input type="text" ng-model="teacher_name" name="teachername" placeholder="Username">
+                <button id="get_info" class="btn" ng-click="get_students();">Login</button>
+            </div>
+        </div>
+        <!-- Students View -->
+        <div ng-show="all_students_view" class="full-dim background">
+            <div class="students-container box">
+                <h1>Piano Students</h1>
+                <div class="student-gallery">
+                    <div class="student-card" ng-repeat = "student in students track by $index" ng-click="redirect_student($index);">
+                        <div ng-if="not_seen[$index]"><span class="unseen-marker">{{not_seen[$index]}}</span></div>
+<!--                         <img id="cactus_{{$index}}" class="cactus_img" src="img/cactus_waiting.png" ng-mouseover="overCactus($index);" ng-mouseleave="offCactus($index);"> -->
+                        <img id="cactus_{{$index}}" class="cactus_img" src="img/cactus_listening.png">
+                        <h2>{{student}}</h2>
+                    </div>
+                </div>
+                <div id="studentadd">
+                    <label for="studentname">Add a student: </label>
+                    <input type="text" ng-model="student_to_add" name="studentname" placeholder="Student Username">
+                    <button id="add_student" class="btn" ng-click="add_student();">Add Student</button>
+                </div>
+            </div>
+        </div>
+        <!-- Student Specific View -->
+        <div ng-show="student_specific_view" class="full-dim background">
+            <div class="profile-container box">
+                <button id="back" class="btn" ng-click="back();">Back</button>
+                <h2>{{curr_student}}'s Practice Profile</h2>
+                <div class="columns-container">
+                    <div class="left">
+                        <section class="profile-section">
+                            <h3>Summary</h3>
+                            <div id="chart_div"></div>
+                        </section>
+                        <section class="profile-section">
+                            <h3>Practice Sessions</h3>
+                            <div class="practice-sessions-container">
+                                <div ng-repeat="session in sessions track by $index" class="practice-section">
+                                    <p><span class="info-label">Start Time:</span> {{session.start_time}}</p>
+                                    <p><span class="info-label">End Time:</span> {{session.end_time}}</p>
+                                    <p><span class="info-label">Total Time:</span> {{session.minutes | number : 2}} minutes</p>
+                                    <p><span class="info-label">Percentage of Time Playing Piano:</span> {{session.percentage | number: 2}} %</p>
+
+                                    <div class="wavform" id="wave_{{$index}}"></div>
+
+                                    <div class="keycount" id="kc_{{$index}}"></div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="right">
+                        <section id="recordings" class="profile-section">
+                            <h3>Recordings</h3>
+                            <div class="recordings-container">
+                                <div ng-repeat="recording in recordings track by $index" class="recording">
+                                    <h5>{{seen_array[$index]}}</h5>
+                                    <h5>{{descriptions[$index]}}</h5>
+                                    <p><span class="info-label">Date:</span> {{send_times[$index]}}</p>
+                                    <div class="test" id="waveform_{{$index}}"></div>
+                                    <div class="button-container">
+                                      <button class="btn" ng-click="playPause($index);">
+                                        <i class="glyphicon glyphicon-play"></i>
+                                        Play/Pause
+                                      </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+    <script src="js/teacherViewController.js"></script>
+    <script src="js/waveform.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.0.52/wavesurfer.min.js"></script>
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+	</body>
+</html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false"
+        android:drawable="@drawable/cactus_button_disabled"/>
+    <item android:drawable="@drawable/cactus_button_pressed"
+        android:state_pressed="true" />
+    <item android:drawable="@drawable/cactus_button_focus"
+        android:state_focused="true" />
+    <item android:drawable="@drawable/cactus_button_default" />
+</selector>

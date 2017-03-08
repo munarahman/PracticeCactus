@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/background_desert"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.practicecactus.practicecactus.Activities.PracticeActivity">
+
+    <Button
+        android:id="@+id/button_menu"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="right"
+        android:background="@drawable/sun_button"
+        android:onClick="onMenuPressed" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/greeting_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="25dp" />
+
+        <ImageView
+            android:id="@+id/cactus_view"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="punchCactus" />
+
+        <TextView
+            android:id="@+id/activity_cactus_name"
+            android:layout_width="216dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#B25C00"
+            android:textSize="25sp"
+            android:maxLength="15"
+            android:layout_height="wrap_content" />
+
+        <com.practicecactus.practicecactus.Cactus.CactusMoodView
+            android:id="@+id/mood_bar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/button_share_practice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/cactus_button"
+            android:onClick="toShare"
+            android:text="Share"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/button_practice_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="0.27"
+            android:background="@drawable/cactus_button"
+            android:onClick="toPracticeList"
+            android:text="Practice List"
+            android:textColor="#FFFFFF"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
