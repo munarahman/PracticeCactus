@@ -45,4 +45,5 @@ public class CommunityActivity extends AppCompatActivity {
         super.onResume();
         analytics.trackScreen(this.getClass().getSimpleName());
     }
+
 }

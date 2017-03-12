@@ -21,6 +21,7 @@ import android.app.Application;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app, such as
@@ -28,6 +29,7 @@ import com.google.android.gms.analytics.Tracker;
  */
 public class AnalyticsApplication extends Application {
     private Tracker mTracker;
+//    private DefaultSessionRecord sessionRecord;
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
@@ -52,4 +54,8 @@ public class AnalyticsApplication extends Application {
                 .setAction(action)
                 .build());
     }
+
+//    public DefaultSessionRecord getSessionRecord() {
+//        return this.sessionRecord;
+//    }
 }

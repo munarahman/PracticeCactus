@@ -3,6 +3,8 @@ package com.practicecactus.practicecactus.Cactus;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.practicecactus.practicecactus.SessionRecord.SessionRecord;
+
 import java.util.Date;
 
 /**
@@ -26,6 +28,8 @@ public class CactusStore {
     private final String LATEST_HEARD = "latest_heard";
     private final String SESSION_LENGTH = "session_length";
     private final String SUGGESTION_ON = "suggestion_on";
+    private final String SESSIONRECORD = "sessionRecord";
+    private final String ENROLLED = "enrolled";
 
 
 //    public static CactusStore getInstance(Context AppContext, String setting_file_name){
@@ -64,7 +68,7 @@ public class CactusStore {
         editor.commit();
     }
 
-    public void save_nickname(String nickname){
+    public void save_name(String nickname){
         SharedPreferences.Editor editor = this.settings.edit();
         editor.putString(NICKNAME, nickname);
         editor.commit();
@@ -120,6 +124,12 @@ public class CactusStore {
         editor.commit();
     }
 
+    public void save_student_enrolled(boolean enrolled) {
+        SharedPreferences.Editor editor = this.settings.edit();
+        editor.putBoolean(this.ENROLLED, enrolled);
+        editor.commit();
+    }
+
     public String load_username(){
         String username = settings.getString(this.USERNAME, null);
         return username;
@@ -130,7 +140,7 @@ public class CactusStore {
         return cactusName;
     }
 
-    public String load_nickname(){
+    public String load_name(){
         String nickname = settings.getString(this.NICKNAME, null);
         return nickname;
     }
@@ -177,6 +187,11 @@ public class CactusStore {
     public boolean load_suggestion_on() {
         boolean suggestion_on = settings.getBoolean(this.SUGGESTION_ON, false);
         return suggestion_on;
+    }
+
+    public boolean load_student_enrolled() {
+        return settings.getBoolean(this.ENROLLED, false);
+
     }
 
     private void save_time(Date time, String key) {

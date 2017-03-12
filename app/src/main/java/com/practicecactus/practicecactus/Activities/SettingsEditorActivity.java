@@ -22,8 +22,6 @@ import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.BuildConfig;
 
-import java.sql.SQLOutput;
-
 public class SettingsEditorActivity extends AppCompatActivity {
     private CactusStore preferences;
 
@@ -48,18 +46,20 @@ public class SettingsEditorActivity extends AppCompatActivity {
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
+        // get the shared preferences
         SharedPreferences prefs = this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
         studentId = prefs.getString("studentId", null);
 
         this.preferences = new CactusStore(getApplicationContext(), studentId);
 
+        // get the settings edit fields
         nameEditText = ((EditText) findViewById((R.id.settings_name)));
         cactusEditText = ((EditText) findViewById(R.id.settings_cactus_name));
         sessionEditText = ((EditText) findViewById(R.id.settings_practice_goal));
 
-
-        nameEditText.setText(this.preferences.load_nickname());
+        // set their default values
+        nameEditText.setText(this.preferences.load_name());
         cactusEditText.setText(this.preferences.load_cactusName());
         sessionEditText.setText(Integer.toString(this.preferences.load_session_length()));
 
@@ -96,12 +96,12 @@ public class SettingsEditorActivity extends AppCompatActivity {
     }
 
     private void saveSettings() {
-        String name = nameEditText.getText().toString();
-        String cactusName = cactusEditText.getText().toString();
-        int sessionLength = Integer.parseInt(sessionEditText.getText().toString());
+        final String name = nameEditText.getText().toString();
+        final String cactusName = cactusEditText.getText().toString();
+        final int sessionLength = Integer.parseInt(sessionEditText.getText().toString());
 
         checkEmpty(name, nameEditText);
-        checkEmpty(cactusName, cactusEditText);
+//        checkEmpty(cactusName, cactusEditText);
         checkEmpty(sessionEditText.getText().toString(), sessionEditText);
 
         if (!TextUtils.isDigitsOnly(sessionEditText.getText())) {
@@ -115,14 +115,11 @@ public class SettingsEditorActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            this.preferences.save_nickname(name);
-            this.preferences.save_cactusName(cactusName);
-            this.preferences.save_session_length(sessionLength);
 
             SharedPreferences prefs = this.getSharedPreferences(
                     "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
             String userId = prefs.getString("userId", null);
-            System.out.println("NAME: " + name);
+
 
             String request = "PUT";
             String requestAddress = "/api/users/" + userId;
@@ -148,6 +145,12 @@ public class SettingsEditorActivity extends AppCompatActivity {
                     else if(serverResponse.getCode() >= 400) {
                         System.out.println("Error setting new name");
                     } else {
+
+                        preferences.save_name(name);
+                        preferences.save_cactusName(cactusName);
+                        preferences.save_session_length(sessionLength);
+
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsEditorActivity.this);
                         builder.setMessage("Saved settings!")
                                 .setPositiveButton(R.string.ok,
@@ -173,6 +176,7 @@ public class SettingsEditorActivity extends AppCompatActivity {
         super.onResume();
         analytics.trackScreen(this.getClass().getSimpleName());
     }
+
 
     private void checkEmpty(String field, EditText fieldEntry) {
         if (field.isEmpty()) {

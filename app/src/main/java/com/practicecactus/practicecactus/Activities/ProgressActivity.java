@@ -9,6 +9,7 @@ import android.webkit.WebView;
 
 import com.practicecactus.practicecactus.AnalyticsApplication;
 import com.practicecactus.practicecactus.R;
+//import com.practicecactus.practicecactus.Utils.CommonFunctions;
 
 import static com.practicecactus.practicecactus.Utils.Constants.SERVER_ADDR;
 
@@ -19,6 +20,8 @@ public class ProgressActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_progress);
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
@@ -46,4 +49,13 @@ public class ProgressActivity extends AppCompatActivity {
         super.onResume();
         analytics.trackScreen(this.getClass().getSimpleName());
     }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        CommonFunctions cf = new CommonFunctions();
+//
+//        this.finishPractice();
+//
+//    }
 }

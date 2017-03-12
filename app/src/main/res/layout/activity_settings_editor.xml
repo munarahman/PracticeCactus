@@ -124,7 +124,6 @@
                 android:textSize="14sp"
                 android:textColor="#0000EE"
                 android:layout_marginTop="30dp"
-                android:gravity="center"
                 android:linksClickable= "true"/>
         </LinearLayout>
 

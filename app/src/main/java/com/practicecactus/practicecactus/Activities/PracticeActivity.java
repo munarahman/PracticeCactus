@@ -1,6 +1,5 @@
 package com.practicecactus.practicecactus.Activities;
 
-import java.sql.Time;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -13,7 +12,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,8 +20,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.practicecactus.practicecactus.AnalyticsApplication;
 import com.practicecactus.practicecactus.AudioAnalysis.AudioAnalysis;
 import com.practicecactus.practicecactus.AudioAnalysis.AudioAnalysisListener;
@@ -76,6 +72,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
         studentId = prefs.getString("studentId", null);
+        System.out.println("studentID:" + studentId);
 
         setContentView(R.layout.activity_practice);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -147,7 +144,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
             @Override
             public void processFinish(ServerResponse serverResponse) {
                 if (serverResponse.getCode() < 400) {
-                    System.out.println("response:" + serverResponse.getResponse().toString());
+                    System.out.println("updateCactusName response:" + serverResponse.getResponse().toString());
 
                     try {
                         cactusName = serverResponse.getResponse().get("cactusName").toString();
@@ -157,12 +154,19 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                     }
                 }
 
-                editor.putString("cactusName", cactusName);
-                editor.apply();
+                if (cactusName != "null") {
+                    editor.putString("cactusName", cactusName);
+                    editor.apply();
+                }
+                else {
+                    cactusName = null;
+                }
 
-                if (!"".equals(cactusName) && cactusName != null &&
-                        !serverResponse.getResponse().isNull("cactusName")) {
+
+                System.out.println("CACTUSNAME in FUnc:" + cactusName);
+                if (cactusName != null && !serverResponse.getResponse().isNull("cactusName")) {
                     activity_cactus_name.setText(cactusName);
+                    cactusStore.save_cactusName(cactusName);
                 }
             }
         });
@@ -188,6 +192,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
             SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
                 @Override
                 public void processFinish(ServerResponse serverResponse) {
+//                    System.out.println("response:" + serverResponse.getResponse());
                     if (serverResponse.getCode() >= 400) {
                         System.out.println("Error retrieving student information");
                     } else {
@@ -195,15 +200,26 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                             JSONObject json = serverResponse.getResponse();
 
                             cactusStore.save_username(getJsonString(json, "username"));
-                            cactusStore.save_nickname(getJsonString(json, "name"));
+                            cactusStore.save_name(getJsonString(json, "name"));
                             cactusStore.save_grade(getJsonString(json, "grade"));
                             cactusStore.save_suggestion_on((boolean) json.get("suggestionOn"));
 
+                            // get the ID of the teacher, null if student not enrolled
+                            String teacherExistsStr = getJsonString(json, "teacher");
+                            boolean teacherExists = true;
+
+                            // if teacherExistsStr is null or empty, no teacher has enrolled this student
+                            if (("".equals(teacherExistsStr)) || teacherExistsStr == null) {
+                                teacherExists = false;
+                            }
+
+                            System.out.println("teacherExists:" + teacherExists);
+                            cactusStore.save_student_enrolled(teacherExists);
+
+
                             // get cactusName from shared Prefs and save it in Cactus Store
-                            System.out.println("BEFORE UPDATE");
                             String newCactusName = updateCactusName(newEditor);
-                            System.out.println("AFTER UPDATE");
-//                            cactusStore.save_cactusName(newCactusName);
+
 
                             Long newGoal = Long.valueOf((int) json.get("desired_practice_time") * 60 * 1000);
                             Long oldGoal = cactusStore.load_practice_goal();
@@ -228,14 +244,16 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                             }
 
                             String usrname = cactusStore.load_username();
-//                            String cactusName = cactusStore.load_cactusName();
 
-                            if (!"".equals(usrname)) {
+                            if (!"".equals(usrname) && teacherExists) {
                                 greeting_text.setText("Hello " + usrname + "!");
                             }
 
-                            if (!"".equals(newCactusName) && newCactusName != null) {
+                            if (newCactusName != null && !"null".equals(newCactusName)) {
+//                                System.out.println("SETTING CACTUS NAME");
+//                                System.out.println("newCactusName:" + newCactusName);
                                 activity_cactus_name.setText(newCactusName);
+
                             }
 
                             if (cactusStore.load_suggestion_on()) {
@@ -286,12 +304,21 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     }
 
     public void toShare(View view){
-        leaving = false;
-        DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(this);
-        DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).pause();
-        Intent shareIntent = new Intent(this, ShareActivity.class);
-        shareIntent.putExtra("username", username);
-        startActivity(shareIntent);
+
+        // if student doesnt have a teacher; dont allow them to share
+        if (!cactusStore.load_student_enrolled()) {
+            Toast.makeText(PracticeActivity.this, R.string.not_enrolled, Toast.LENGTH_LONG).show();
+        }
+        else {
+
+            leaving = false;
+            DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(this);
+            DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).pause();
+            Intent shareIntent = new Intent(this, ShareActivity.class);
+            shareIntent.putExtra("username", username);
+            startActivity(shareIntent);
+
+        }
     }
 
     public void toPracticeList(View view) {
