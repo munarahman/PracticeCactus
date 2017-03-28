@@ -151,7 +151,7 @@ public class CactusStore {
     }
 
     public Long load_practice_goal() {
-        Long goal = settings.getLong(this.PRACTICE_GOAL, 60 * 60 * 1000);
+        Long goal = settings.getLong(this.PRACTICE_GOAL, 6000000);
         return goal;
     }
 

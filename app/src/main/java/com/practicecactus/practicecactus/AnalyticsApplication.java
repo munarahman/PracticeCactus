@@ -16,11 +16,14 @@
 
 package com.practicecactus.practicecactus;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.practicecactus.practicecactus.Activities.PracticeActivity;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
 
 /**
@@ -29,7 +32,9 @@ import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord
  */
 public class AnalyticsApplication extends Application {
     private Tracker mTracker;
-//    private DefaultSessionRecord sessionRecord;
+    private DefaultSessionRecord sessionRecord;
+    private PracticeActivity listeningActivity;
+
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
@@ -55,7 +60,19 @@ public class AnalyticsApplication extends Application {
                 .build());
     }
 
-//    public DefaultSessionRecord getSessionRecord() {
-//        return this.sessionRecord;
-//    }
+    public DefaultSessionRecord getSessionRecord() {
+        return this.sessionRecord;
+    }
+
+    public void createNewSessionRecord(Context context) {
+        this.sessionRecord = new DefaultSessionRecord(context);
+    }
+
+    public PracticeActivity getListeningActivity() {
+        return this.listeningActivity;
+    }
+
+    public void setListeningActivity(PracticeActivity newActivity) {
+        this.listeningActivity = newActivity;
+    }
 }

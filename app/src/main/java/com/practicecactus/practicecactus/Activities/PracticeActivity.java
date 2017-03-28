@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -33,6 +34,9 @@ import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
+import com.practicecactus.practicecactus.Utils.Metronome;
+import com.practicecactus.practicecactus.Utils.MetronomeNew;
+import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
@@ -60,6 +64,9 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     public boolean leaving;
     public OfflineManager offlineManager;
+    private SharedPreferences prefs;
+
+    private Synthesizer synthesizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +75,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
-        SharedPreferences prefs = this.getSharedPreferences(
+        prefs = this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
         studentId = prefs.getString("studentId", null);
@@ -81,14 +88,58 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         cactusStore = new CactusStore(getApplicationContext(), studentId);
         offlineManager = OfflineManager.getInstance(this);
 
+//        AsyncTask.execute(new Runnable() {
+//            MetronomeNew newMetronome = new MetronomeNew();
+//
+//            @Override
+//            public void run() {
+//                System.out.println("******++++++hello");
+//                //TODO your background code
+//                newMetronome.playMetronome();
+//            }
+//        });
+
         soundSummary = new ArrayList<>();
-        sessionRecord = new DefaultSessionRecord(getApplicationContext());
+
+        /* set the listening activity to be this activity, so that the session can be unregistered
+            from any activity
+        */
+//        sessionRecord = new DefaultSessionRecord(getApplicationContext());
+        ((AnalyticsApplication) getApplication()).setListeningActivity(this);
+        ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
+        sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
+
 
         greeting_text = (TextView) findViewById(R.id.greeting_text);
         activity_cactus_name = (TextView) findViewById(R.id.activity_cactus_name);
 
         DefaultAudioAnalysisPublisher.getInstance(getApplicationContext())
                 .register(this);
+
+
+        // run the metronome beat on a separate thread
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                synthesizer = new Synthesizer();
+
+                while(true){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    playMetronome();
+                }
+            }
+        }).start();
+
+    }
+    public void playMetronome() {
+
+        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
+        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
 
     }
 
@@ -114,10 +165,18 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
         this.cactus.resume();
 
-        if (ended){
-            sessionRecord = new DefaultSessionRecord(getApplicationContext());
+        boolean sentData = prefs.getBoolean("sentData", false);
+
+        if (ended || sentData){
+//            sessionRecord = new DefaultSessionRecord(getApplicationContext());
+            ((AnalyticsApplication) getApplication()).setListeningActivity(this);
+
+            ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
+            sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
             ended = false;
         }
+
+        System.out.println("practice resume start time:" + sessionRecord.get_start_time());
 
         analytics.trackScreen(this.getClass().getSimpleName());
 
@@ -222,13 +281,18 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
 
                             Long newGoal = Long.valueOf((int) json.get("desired_practice_time") * 60 * 1000);
+                            System.out.println("+++++NEW GOAL:" + newGoal);
                             Long oldGoal = cactusStore.load_practice_goal();
                             Long practiceLeft = cactusStore.load_practice_left();
                             cactusStore.save_practice_goal(newGoal);
 
 
                             if (oldGoal != newGoal) {
+
                                 int amountPracticed = (int) (oldGoal - practiceLeft);
+
+                                System.out.println("++++OLD GOAL:" + oldGoal);
+                                System.out.println("++++PRACTICE LEFT:" + practiceLeft);
                                 long newPracticeLeft = newGoal - amountPracticed;
 //                                cactusStore.save_practice_left(newPracticeLeft);
                                 cactus.setPracticeLeft(newPracticeLeft);
@@ -239,6 +303,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
                             // when creating new account, student has not practiced yet
                             if (previousIntent.getStringExtra("newAccount") != null) {
+                                System.out.println("*********I'M A NEW ACCOUNT: setting new goal");
                                 cactusStore.save_practice_left(newGoal);
                                 cactusStore.save_time_goal_reached(0L);
                             }
@@ -496,11 +561,11 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                     keyCountString.substring(0, keyCountString.length() - 1)
             );
 
-            System.out.println("PIANO TIME: " + sessionRecord.get_piano_time());
+            System.out.println("PIANO TIME IN PRACTICE: " + sessionRecord.get_piano_time());
 
             offlineManager.sendFileAttempt(session);
         }
 
-
+        System.out.println("practice finishPractice start time:" + sessionRecord.get_start_time());
     }
 }

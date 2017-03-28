@@ -3,57 +3,165 @@
 
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/a71e493e0e4a55e85ad31e89788a4afc0381845f/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
-        revision="23.0.2"
-        sha1="2a53c4f3518116b8c6aee0e477233f0f7da8616f">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-fragment-25.1.0_5f8ffb623d7895aa1505eda7031f1ad4f29b7328/classes.dex" />
+        revision="25.0.0"
+        sha1="593fbaec1c3e100480a2bd72457b64b7dde6ac2d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0220ec0507d2d2acb91351e390e9aa11265c31fa/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/9.2.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/a07672d4749d9dd37a823d9a6c07c1bd26b772c8/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="dc4c18602ecffb3e69cda6cdc51ba4feac0f97d7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_667196b0303f892b3b48c9f644b58989153cb826/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="4838df6db988160b107e954e02a745370df543b6">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-9.2.0_c3f5a05256297d77ed86526784c98ea1c7e289dd/classes.dex" />
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-v4-25.1.0_1c4bfacc913bfe4201024c0d9d4735527000c7d4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.1.0/support-annotations-25.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="64cb6b229a8bdfd907bc8dd46839a0053e4c018d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/support-annotations-25.1.0_1cfab8f874088f90d7728f0d7b7de62594846efd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="593fbaec1c3e100480a2bd72457b64b7dde6ac2d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-tasks-9.2.0_a0a5bea17020c5d3691ef3caf18b8991fdc4c804.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="ca3c7aa31e2726a400a6e552b93cb9f63c9a1e6d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-compat-25.1.0_7e2196095a5bfcc0c88fd462df74ecb092e0f65d.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/2b6a5ef7ef00c3ac65c8380e08e4e5d71e2e32dc/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="aee64634871d88a419d59eb743c1258a60f19700">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3fd298c7dc8a3a7162201a07db8999d6a11f8e98/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="6fb6ac3e8d3b9013819920d9ea11f3803c4c0033">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-25.1.0_755411edef9f8277a94f28b0ffaf42dee0860c7d/classes.dex" />
+        sha1="0a0ef86b7fa568a52bf6214a0326ca1f1d618da7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-core-utils-25.1.0_249fb3598473b738bdf363ef7beebacbb550ed7b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="fb15fd9774b5c51dcb39d8e6fa1b6f06bcd1cd34">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-analytics-impl-9.2.0_e5e8bc43c4b0be7b6f3a4d7038a4844ed80bcedf.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/pl.edu.icm/JLargeArrays/1.2/85c8cd79cc2865ef37cd70f96cd82246ee642d58/JLargeArrays-1.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="85c8cd79cc2865ef37cd70f96cd82246ee642d58">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/JLargeArrays-1.2_69bcb4b90a83200e7adae7df9c0e116b48924cd7.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/design/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/a72625d321ce2d3ba9516cf595bfdd2babf0e20a/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="1630658fbc2d222b988603c27b4a4249586fbfe7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d4399f32019d05acf93eed9aa5961ea155b811d0/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/transition/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="30103d98fa5ed824b54af839c85e2111f9bde8ec">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-25.1.0_3cd309d1d9d3bcbb66553f5eb713aaaac4f841dc/classes.dex" />
+        sha1="d38084015027549951cbaea5d5f6fb795cc81151">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-transition-25.1.0_7fd2b2e02baf34ab6748cd71100100a0a3eca9a9.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.2.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/a2b34739b1cc2f17d43ceb807d3a6f7092e4121a/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="b266c8faa5af72e579b9da36ef35053ffed6ac64">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_832e2c4f86161af6ab00e4fb8b4c07518340f01c/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/com.github.wendykierp/JTransforms/3.0/79477aec6929cd64cd863d6ac59c2445d00239a3/JTransforms-3.0.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="dd7676ac12aa6653718b7ea33d93ce9d6915d526">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-9.2.0_0ec9d37b03846e44bf4ab221fd3bb99330ca6085/classes.dex" />
+        sha1="79477aec6929cd64cd863d6ac59c2445d00239a3">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/JTransforms-3.0_12fbbda005c6a7e3be03d80cc2b02107e99b3985.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/9.2.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/35ef593053b8e06a51798bfde7bae5fca2fc85cc/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="30489a97b06cc3945bdbcc1770089af9e3b3b64d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_962f2bd21ff6e43e7ebd0aca4f5090a7f8c67d6d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/pl.edu.icm/JLargeArrays/1.2/85c8cd79cc2865ef37cd70f96cd82246ee642d58/JLargeArrays-1.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="85c8cd79cc2865ef37cd70f96cd82246ee642d58">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/JLargeArrays-1.2_69bcb4b90a83200e7adae7df9c0e116b48924cd7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/com.github.wendykierp/JTransforms/3.0/79477aec6929cd64cd863d6ac59c2445d00239a3/JTransforms-3.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="79477aec6929cd64cd863d6ac59c2445d00239a3">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/JTransforms-3.0_12fbbda005c6a7e3be03d80cc2b02107e99b3985/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="18e52280643effbab30370b073e456d670a0db54">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-9.2.0_e0d39fe48a2b925216af6898628d043b733815a0/classes.dex" />
+        sha1="363f626ad5686283250cdb6073ae1bba5cb07a87">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-common-9.2.0_ee2a56074d1954635edc51ea8c54229e9fa7f956.jar" />
     </item>
     <item
         is-multidex="true"
@@ -65,31 +173,40 @@
         <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpclient-android-4.3.5.1_0720a6064a8919d4cf7b18b53962f05c9788f33c/classes.dex" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.1.0/jars/classes.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/9.2.0/jars/classes.jar"
+        jumboMode="false"
         optimize="true"
         revision="23.0.2"
+        sha1="7428f0d1debdcf1b5792a26146e51a38d992d04d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-analytics-impl-9.2.0_22a7c07a63e5a5fab82f38581b2afb3a5c234588.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/491f2329188f0b9a3f74c1fb9a431575fe709903/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f02263e35e52668dd17b73bf961437e3d562b35f">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d80b7bfe5a2f0b522be04a1c50f51b4b19f687a7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/662a7d4ec67c8d43f0db301492bd2a1dfc90d620/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7428f0d1debdcf1b5792a26146e51a38d992d04d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f1da7f2763f0e563d43814a11f5bbeb18e99364c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/7610866f468acbaa2e55f4f4efeabe55057ca7b6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
         sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-25.1.0_04337311d6502ce9e90c9afbcf6dce1bff8a7687/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/9.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="dc4c18602ecffb3e69cda6cdc51ba4feac0f97d7">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-9.2.0_6c59e17c39db979013e3fdd80f3158d4055e6b77/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="b266c8faa5af72e579b9da36ef35053ffed6ac64">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-25.1.0_7554e061ea103e9846099b26b5ca60899a7a7214/classes.dex" />
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_911ed33d62d0c4c7bfe53168849f4d60b8b623f3/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -101,40 +218,139 @@
         <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/joda-time-2.9.2_a28a83e75e9b365ddb24a09e7630ba38d7175cbe/classes.dex" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.1.0/jars/classes.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/design/25.1.0/jars/classes.jar"
+        jumboMode="false"
         optimize="true"
         revision="23.0.2"
-        sha1="f02263e35e52668dd17b73bf961437e3d562b35f">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-25.1.0_6946fabd01a6e6608a443ef080c3599c893bc954/classes.dex" />
+        sha1="30103d98fa5ed824b54af839c85e2111f9bde8ec">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-design-25.1.0_3cd309d1d9d3bcbb66553f5eb713aaaac4f841dc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="1630658fbc2d222b988603c27b4a4249586fbfe7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-appcompat-v7-25.1.0_e5a13447d4e40ab083d9d6aa0bdcc3373a1fa2c7.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jar="/Users/Muna/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.1.0/support-annotations-25.1.0.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="64cb6b229a8bdfd907bc8dd46839a0053e4c018d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-25.1.0_1cfab8f874088f90d7728f0d7b7de62594846efd/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="05dd028789eab9d73702eba3ec8d951555644b97">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_97fe90c1d736ee625f0995946cfaedaee4d624ce/classes.dex" />
+        sha1="30489a97b06cc3945bdbcc1770089af9e3b3b64d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-base-9.2.0_c4cf71f74a2ba305bdbb25036ebd69ab1025393e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="aee64634871d88a419d59eb743c1258a60f19700">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-core-ui-25.1.0_b761f8b194179998042e5b3547b262c0f4a4cc7b.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.5/6c6c702c89bfff3cd9e80b04d668c5e190d588c6/commons-lang3-3.5.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="6c6c702c89bfff3cd9e80b04d668c5e190d588c6">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/commons-lang3-3.5_dc30a307f37fb5e7b58f3d793f224c8e10db0c61/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.5/6c6c702c89bfff3cd9e80b04d668c5e190d588c6/commons-lang3-3.5.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-25.1.0_1c4bfacc913bfe4201024c0d9d4735527000c7d4/classes.dex" />
+        sha1="6c6c702c89bfff3cd9e80b04d668c5e190d588c6">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/commons-lang3-3.5_dc30a307f37fb5e7b58f3d793f224c8e10db0c61.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5078fba9758e3d776800318fb18a25a90146842c/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="ca3c7aa31e2726a400a6e552b93cb9f63c9a1e6d">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-25.1.0_7e2196095a5bfcc0c88fd462df74ecb092e0f65d/classes.dex" />
+        sha1="4838df6db988160b107e954e02a745370df543b6">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-analytics-9.2.0_c3f5a05256297d77ed86526784c98ea1c7e289dd.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/918f9e0018e0a23c01951b426cf7d506eb59bc6f/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="2a53c4f3518116b8c6aee0e477233f0f7da8616f">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ad5668c83a6d97d45f2105ea20b1b49ac6ca1b91/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/050f07339b4e688d5c4b9c2fb2a3c865e90ede81/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="0a0ef86b7fa568a52bf6214a0326ca1f1d618da7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_99201a80fe19490fe137cfbe4095f13a076f16d7/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="2a53c4f3518116b8c6aee0e477233f0f7da8616f">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-fragment-25.1.0_5f8ffb623d7895aa1505eda7031f1ad4f29b7328.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="6fb6ac3e8d3b9013819920d9ea11f3803c4c0033">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-animated-vector-drawable-25.1.0_755411edef9f8277a94f28b0ffaf42dee0860c7d.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/0b1340b5d48605a21b945fb54aa1546ae5603b91/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d38084015027549951cbaea5d5f6fb795cc81151">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_ee9e70eaf22904605b2a601f3c5b5f1c914dd05e/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-android/4.3.5.1/eecbb0b998e77629862a13d957d552b3be58fc4e/httpclient-android-4.3.5.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="eecbb0b998e77629862a13d957d552b3be58fc4e">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/httpclient-android-4.3.5.1_0720a6064a8919d4cf7b18b53962f05c9788f33c.jar" />
     </item>
     <item
         is-multidex="true"
@@ -147,39 +363,30 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/c5fc815620a77e880e1dbacf293aa8313ffe38fb/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
-        revision="23.0.2"
-        sha1="0a0ef86b7fa568a52bf6214a0326ca1f1d618da7">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-25.1.0_249fb3598473b738bdf363ef7beebacbb550ed7b/classes.dex" />
+        revision="25.0.0"
+        sha1="363f626ad5686283250cdb6073ae1bba5cb07a87">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0020aaa7cafb27df0b9bb929d27ded25092f0c5f/classes.dex" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.2.0/jars/classes.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.2.0/jars/classes.jar"
+        jumboMode="false"
         optimize="true"
         revision="23.0.2"
-        sha1="593fbaec1c3e100480a2bd72457b64b7dde6ac2d">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-9.2.0_a0a5bea17020c5d3691ef3caf18b8991fdc4c804/classes.dex" />
+        sha1="dd7676ac12aa6653718b7ea33d93ce9d6915d526">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-basement-9.2.0_0ec9d37b03846e44bf4ab221fd3bb99330ca6085.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/9.2.0/jars/classes.jar"
-        jumboMode="true"
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.1.0/jars/classes.jar"
+        jumboMode="false"
         optimize="true"
         revision="23.0.2"
-        sha1="fb15fd9774b5c51dcb39d8e6fa1b6f06bcd1cd34">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-9.2.0_e5e8bc43c4b0be7b6f3a4d7038a4844ed80bcedf/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/transition/25.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d38084015027549951cbaea5d5f6fb795cc81151">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-transition-25.1.0_7fd2b2e02baf34ab6748cd71100100a0a3eca9a9/classes.dex" />
+        sha1="b266c8faa5af72e579b9da36ef35053ffed6ac64">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-recyclerview-v7-25.1.0_7554e061ea103e9846099b26b5ca60899a7a7214.jar" />
     </item>
     <item
         is-multidex="true"
@@ -192,39 +399,111 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.2.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/b40889838619f831204ac6316819545447dd45ca/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
-        revision="23.0.2"
-        sha1="363f626ad5686283250cdb6073ae1bba5cb07a87">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-common-9.2.0_ee2a56074d1954635edc51ea8c54229e9fa7f956/classes.dex" />
+        revision="25.0.0"
+        sha1="fb15fd9774b5c51dcb39d8e6fa1b6f06bcd1cd34">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_5e566ebb6245ee8119d9d32a20dce3086b8531b2/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics-impl/9.2.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/e6bf7e095e502846b8e42260e2a4e8b6b75b7389/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
-        revision="23.0.2"
-        sha1="7428f0d1debdcf1b5792a26146e51a38d992d04d">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-impl-9.2.0_22a7c07a63e5a5fab82f38581b2afb3a5c234588/classes.dex" />
+        revision="25.0.0"
+        sha1="6fb6ac3e8d3b9013819920d9ea11f3803c4c0033">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_a7367a8efcd957b04ee928b98bafefbd00b5dd96/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient-android/4.3.5.1/eecbb0b998e77629862a13d957d552b3be58fc4e/httpclient-android-4.3.5.1.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="eecbb0b998e77629862a13d957d552b3be58fc4e">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpclient-android-4.3.5.1_0720a6064a8919d4cf7b18b53962f05c9788f33c/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="1630658fbc2d222b988603c27b4a4249586fbfe7">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-25.1.0_e5a13447d4e40ab083d9d6aa0bdcc3373a1fa2c7/classes.dex" />
+        sha1="18e52280643effbab30370b073e456d670a0db54">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-analytics-9.2.0_e0d39fe48a2b925216af6898628d043b733815a0.jar" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.2.0/jars/classes.jar"
+        jar="/Users/Muna/.android/build-cache/61ecf0dd5b214cc4bafce63c80024693fde4e7b4/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="30103d98fa5ed824b54af839c85e2111f9bde8ec">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e3f901043f69f85a5b2841227fa445ae28ebb3d0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/3d95a8c77b42978bb7e4b873a542b7a610b1ec48/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ca3c7aa31e2726a400a6e552b93cb9f63c9a1e6d">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_f0ce4355c38318c9cf11c5d53fcee414100a354f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.9.2/36d6e77a419cb455e6fd5909f6f96b168e21e9d0/joda-time-2.9.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="36d6e77a419cb455e6fd5909f6f96b168e21e9d0">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/joda-time-2.9.2_a28a83e75e9b365ddb24a09e7630ba38d7175cbe/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="30489a97b06cc3945bdbcc1770089af9e3b3b64d">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-9.2.0_c4cf71f74a2ba305bdbb25036ebd69ab1025393e/classes.dex" />
+        sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-vector-drawable-25.1.0_04337311d6502ce9e90c9afbcf6dce1bff8a7687.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/ff2012a41f31f5f6ea66b8a0c3e65b6ff146202e/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="4838df6db988160b107e954e02a745370df543b6">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_522c0b828977c257594dbbf93020bcfa77841336/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/832548303aa9361260682ae11e96c27e68add604/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="18e52280643effbab30370b073e456d670a0db54">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_65fa9e1733f770a04120c425ad32d4f6cee5e703/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.9.2/36d6e77a419cb455e6fd5909f6f96b168e21e9d0/joda-time-2.9.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="36d6e77a419cb455e6fd5909f6f96b168e21e9d0">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/joda-time-2.9.2_a28a83e75e9b365ddb24a09e7630ba38d7175cbe.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/9.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="dc4c18602ecffb3e69cda6cdc51ba4feac0f97d7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-iid-9.2.0_6c59e17c39db979013e3fdd80f3158d4055e6b77.jar" />
     </item>
     <item
         is-multidex="true"
@@ -246,21 +525,39 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jar="/Users/Muna/.android/build-cache/649b42cb244b01bc293535082b8d0c0049b35161/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
-        revision="23.0.2"
-        sha1="f3a672d94cb3be8bf833f1b8ff101bd73b205f97">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_5078fba9758e3d776800318fb18a25a90146842c/classes.dex" />
+        revision="25.0.0"
+        sha1="dd7676ac12aa6653718b7ea33d93ce9d6915d526">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_2b9a9f7ba5a45b94dc3a590af4ee4089fc92843b/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.1.0/jars/classes.jar"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
+        revision="25.0.0"
+        sha1="57e3afbec3a11fea077cf4dcc90598b4fa8813a7">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_97fe90c1d736ee625f0995946cfaedaee4d624ce/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/.android/build-cache/6abd0be95a9eca000d685fc9b9c1790f42757f69/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0417cfbd1dcdcd637a51a1f0d77759a711204699/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
         revision="23.0.2"
-        sha1="aee64634871d88a419d59eb743c1258a60f19700">
-        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-25.1.0_b761f8b194179998042e5b3547b262c0f4a4cc7b/classes.dex" />
+        sha1="f02263e35e52668dd17b73bf961437e3d562b35f">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/pre-dexed/release/com.android.support-support-media-compat-25.1.0_6946fabd01a6e6608a443ef080c3599c893bc954.jar" />
     </item>
 
 </items>

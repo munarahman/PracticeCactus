@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,11 +17,17 @@ import android.content.Intent;
 
 
 import com.practicecactus.practicecactus.AnalyticsApplication;
+import com.practicecactus.practicecactus.AudioAnalysis.impl.DefaultAudioAnalysisPublisher;
 import com.practicecactus.practicecactus.Cactus.CactusStore;
+import com.practicecactus.practicecactus.OfflineManager;
 import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.BuildConfig;
+import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
+import com.practicecactus.practicecactus.Utils.AudioGenerator;
+import com.practicecactus.practicecactus.Utils.CommonFunctions;
+import com.practicecactus.practicecactus.Utils.Metronome;
 
 public class SettingsEditorActivity extends AppCompatActivity {
     private CactusStore preferences;
@@ -39,6 +46,14 @@ public class SettingsEditorActivity extends AppCompatActivity {
     private String studentId;
     private String verCode;
 
+    private DefaultSessionRecord sessionRecord;
+    private OfflineManager offlineManager;
+    private boolean ended;
+    private SharedPreferences.Editor editor;
+
+    private double beatSound;
+    private double sound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +61,14 @@ public class SettingsEditorActivity extends AppCompatActivity {
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
+        offlineManager = OfflineManager.getInstance(this);
+
         // get the shared preferences
         SharedPreferences prefs = this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
+
+        editor = prefs.edit();
+
         studentId = prefs.getString("studentId", null);
 
         this.preferences = new CactusStore(getApplicationContext(), studentId);
@@ -93,7 +113,54 @@ public class SettingsEditorActivity extends AppCompatActivity {
 
         verCode = Integer.toString(BuildConfig.VERSION_CODE);
         versionCode.setText(verCode);
+
+        ended = false;
+
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        analytics.trackScreen(this.getClass().getSimpleName());
+
+        if (ended) {
+            ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
+            sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        /*
+        * isFinishing() will be false if HOME button or the screen turns off.
+        * isFinishing() Will be t rue if BACK button is pressed
+        * */
+
+        if (!this.isFinishing()){
+            System.out.println("leaving");
+
+            // get the practice Activity and unregister it
+            PracticeActivity activity = ((AnalyticsApplication) getApplication()).getListeningActivity();
+            DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(activity);
+
+            sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
+            CommonFunctions cf = new CommonFunctions();
+            cf.finishPractice(sessionRecord, this, offlineManager);
+
+            offlineManager.clearCache();
+            ended = true;
+
+            editor.putBoolean("sentData", ended);
+            editor.commit();
+        }
+        else {
+            System.out.println("JOKES NOT LEAVING");
+        }
+    }
+
 
     private void saveSettings() {
         final String name = nameEditText.getText().toString();
@@ -101,7 +168,6 @@ public class SettingsEditorActivity extends AppCompatActivity {
         final int sessionLength = Integer.parseInt(sessionEditText.getText().toString());
 
         checkEmpty(name, nameEditText);
-//        checkEmpty(cactusName, cactusEditText);
         checkEmpty(sessionEditText.getText().toString(), sessionEditText);
 
         if (!TextUtils.isDigitsOnly(sessionEditText.getText())) {
@@ -169,12 +235,6 @@ public class SettingsEditorActivity extends AppCompatActivity {
         }
 
         isValid = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        analytics.trackScreen(this.getClass().getSimpleName());
     }
 
 

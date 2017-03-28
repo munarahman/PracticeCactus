@@ -17,6 +17,7 @@ import com.practicecactus.practicecactus.Activities.PracticeActivity;
 import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
+import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
@@ -45,6 +46,7 @@ public class Cactus implements AudioAnalysisListener{
     private Long timeGoalReached;   // in milliseconds
     private boolean heardMusic = false;
     private DateTime lastTime = new DateTime();
+    private Synthesizer synthesizer;
 
     OfflineManager offlineManager;
 
@@ -60,6 +62,7 @@ public class Cactus implements AudioAnalysisListener{
         cactusStore = new CactusStore(activity.getApplicationContext(), studentId);
         offlineManager = OfflineManager.getInstance(activity);
 
+
         this.mood = this.initMood();
         this.cactusView = new CactusView((ImageView) activity.findViewById(R.id.cactus_view));
         this.temporalSmoother = new TemporalSmoother();
@@ -68,6 +71,9 @@ public class Cactus implements AudioAnalysisListener{
         practiceGoal = cactusStore.load_practice_goal();
         practiceLeft = cactusStore.load_practice_left();
         timeGoalReached = cactusStore.load_time_goal_reached();
+
+//        synthesizer = new Synthesizer();
+
     }
 
     public float getMood() {
@@ -105,10 +111,19 @@ public class Cactus implements AudioAnalysisListener{
         return this.mood;
     }
 
+    public void playMetronome() {
+
+        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
+        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
+
+    }
+
     @Override
     public void listenForAnalysis(AudioAnalysis analysis) {
         float newVal;
         int windowFlags = this.activity.getWindow().getAttributes().flags;
+
+//        playMetronome();
 
 
         if ( this.temporalSmoother.smooth(analysis.isPiano())) {
@@ -144,7 +159,7 @@ public class Cactus implements AudioAnalysisListener{
 
                 // set heardMusic to true to indicate the cactus has heard music
                 heardMusic = true;
-//                System.out.println("UPDATE: " + practiceGoal + " " + practiceLeft + " " + timeGoalReached);
+                System.out.println("UPDATE: " + practiceGoal + " " + practiceLeft + " " + timeGoalReached);
             }
         } else {
 
@@ -158,6 +173,7 @@ public class Cactus implements AudioAnalysisListener{
 
 
             int secBetween = Seconds.secondsBetween(lastTime, new DateTime()).getSeconds();
+            System.out.println("NOT LISTENING:" + secBetween);
 
             // 5 minutes with no playing, let go of control over screen.
             if (secBetween >= 300) {

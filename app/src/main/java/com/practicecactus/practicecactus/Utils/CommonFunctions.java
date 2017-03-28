@@ -2,7 +2,6 @@ package com.practicecactus.practicecactus.Utils;
 
 import android.app.Activity;
 
-import com.practicecactus.practicecactus.Activities.PracticeActivity;
 import com.practicecactus.practicecactus.Cacheable.impl.PracticeSession;
 import com.practicecactus.practicecactus.OfflineManager;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
@@ -33,13 +32,13 @@ public class CommonFunctions {
                     keyCountString.substring(0, keyCountString.length() - 1)
             );
 
-            System.out.println("PIANO TIME: " + sessionRecord.get_piano_time());
+            System.out.println("PIANO TIME IN COMMON FUNC: " + sessionRecord.get_piano_time());
 
             offlineManager.sendFileAttempt(session);
         }
 
+        System.out.println("commonfunc finishPractice start time:" + sessionRecord.get_start_time());
+
         return true;
-
-
     }
 }
