@@ -87,6 +87,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     private ArrayList<String> notificationsList = new ArrayList<>();
     private ArrayList<String> commentHistory = new ArrayList<>();
+    Button notificationsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,14 +170,14 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         leaving = true;
     }
 
-    public void onClick(View v) {
-
-        if (v.getId() == R.id.notifications) {
-            System.out.println("HEY IM ACTUALLY USED *********");
-            displayNotifications(v);
-        }
-
-    }
+//    public void onClick(View v) {
+//
+//        if (v.getId() == R.id.notifications) {
+//            System.out.println("HEY IM ACTUALLY USED *********");
+//            displayNotifications(v);
+//        }
+//
+//    }
 
     void displayNotifications1(View v) {
 
@@ -190,7 +191,8 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 //        getNotifications();
     }
 
-    void displayNotifications(View v) {
+
+    public void displayNotifications(View v) {
 
         notificationsList.clear();
 
@@ -258,16 +260,20 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
                                 notificationsList = new ArrayList<>(Arrays.asList(
                                         "You have no unread notifications!"));
+//                                notificationsButton.setBackgroundResource(R.drawable.has_notifications);
                             }
                             else {
-                                System.out.println("LIST----:" + notificationsList.toString());
+
                                 // save the new comments to sharedPref
                                 cactusStore.save_comment_history(commentHistory);
+
+                                notificationsButton = (Button)findViewById(R.id.notifications);
+//                                notificationsButton.setBackgroundResource(R.drawable.has_notifications);
                             }
 
-                            System.out.println("notificationsList:**********************");
-                            System.out.println(notificationsList.toString());
-                            System.out.println("TOKEN:" + prefs.getString("token", "default"));
+//                            System.out.println("notificationsList:**********************");
+//                            System.out.println(notificationsList.toString());
+//                            System.out.println("TOKEN:" + prefs.getString("token", "default"));
 
                             DialogFragment newFragment = NotificationsFragment.newInstance(notificationsList);
                             newFragment.show(getFragmentManager(), "dialog");
@@ -337,7 +343,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
             @Override
             public void processFinish(ServerResponse serverResponse) {
                 if (serverResponse.getCode() < 400) {
-                    System.out.println("updateCactusName response:" + serverResponse.getResponse().toString());
+//                    System.out.println("updateCactusName response:" + serverResponse.getResponse().toString());
 
                     try {
                         JSONObject cactusNameOBJ = serverResponse.getResponse();
@@ -362,7 +368,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                 }
 
 
-                System.out.println("CACTUSNAME in FUnc:" + cactusName);
+//                System.out.println("CACTUSNAME in FUnc:" + cactusName);
                 if (cactusName != null && !serverResponse.getResponse().isNull("cactusName")) {
                     activity_cactus_name.setText(cactusName);
                     cactusStore.save_cactusName(cactusName);

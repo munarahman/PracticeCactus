@@ -140,7 +140,6 @@ public class CactusStore {
         set.addAll(commentsHistory);
         editor.putStringSet(this.COMMENTS_HISTORY, set);
 
-        System.out.println("SAVING SET SIzE+++:" + set.size());
         editor.commit();
     }
 
@@ -213,8 +212,6 @@ public class CactusStore {
         ArrayList<String> newList = new ArrayList<>();
 
         Set<String> newSet = settings.getStringSet(this.COMMENTS_HISTORY, null);
-
-        System.out.println("STORED SET SIzE+++:" + newSet.size());
 
         if (newSet != null){
             newList.addAll(newSet);

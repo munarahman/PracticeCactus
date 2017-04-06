@@ -83,10 +83,6 @@
             android:name=".Activities.ContactActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Activities.ProgressActivity" />
-        <activity
-            android:name=".Activities.NotificationsListActivity"
-            android:label="@string/title_activity_notifications_list"
-            android:theme="@style/AppFullScreenTheme"></activity>
     </application>
 
 </manifest>
