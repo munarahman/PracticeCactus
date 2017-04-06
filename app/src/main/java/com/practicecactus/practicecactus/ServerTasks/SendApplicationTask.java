@@ -113,6 +113,7 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
                     String brOutput = br.readLine();
 
                     if (brOutput != null) {
+
                         JSONObject json = new JSONObject(brOutput);
 
                         // save token and other user data only when logging in or creating a new account
@@ -172,11 +173,8 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
 
                 // if a student is logging in, save their student and user ID
                 if (!userRole.equals("teacher") && !userRole.equals("user")) {
-                    System.out.println("userId: " + userId);
 
                     String studentId = (String) json.get("studentId");
-                    System.out.println("studentId: " + studentId);
-
                     // save userId studentId to shared preferences
                     SharedPreferences.Editor editor = this.callingActivity.getSharedPreferences(
                             "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE).edit();

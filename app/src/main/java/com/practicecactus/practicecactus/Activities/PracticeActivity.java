@@ -1,26 +1,40 @@
 package com.practicecactus.practicecactus.Activities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.practicecactus.practicecactus.Activities.Notifications.NotificationsFragment;
 import com.practicecactus.practicecactus.AnalyticsApplication;
 import com.practicecactus.practicecactus.AudioAnalysis.AudioAnalysis;
 import com.practicecactus.practicecactus.AudioAnalysis.AudioAnalysisListener;
@@ -34,11 +48,13 @@ import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
+import com.practicecactus.practicecactus.Utils.AudioGenerator;
 import com.practicecactus.practicecactus.Utils.Metronome;
-import com.practicecactus.practicecactus.Utils.MetronomeNew;
+import com.practicecactus.practicecactus.Utils.NotificationsList;
 import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,12 +77,16 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     private AnalyticsApplication analytics;
     private String eventCategory = this.getClass().getSimpleName();
     private String cactusName;
+    private MediaPlayer mPlayer;
 
     public boolean leaving;
     public OfflineManager offlineManager;
     private SharedPreferences prefs;
-
+    private Thread metronomeThread;
     private Synthesizer synthesizer;
+
+    private ArrayList<String> notificationsList = new ArrayList<>();
+    private ArrayList<String> commentHistory = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,23 +108,11 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         cactusStore = new CactusStore(getApplicationContext(), studentId);
         offlineManager = OfflineManager.getInstance(this);
 
-//        AsyncTask.execute(new Runnable() {
-//            MetronomeNew newMetronome = new MetronomeNew();
-//
-//            @Override
-//            public void run() {
-//                System.out.println("******++++++hello");
-//                //TODO your background code
-//                newMetronome.playMetronome();
-//            }
-//        });
-
         soundSummary = new ArrayList<>();
 
         /* set the listening activity to be this activity, so that the session can be unregistered
             from any activity
         */
-//        sessionRecord = new DefaultSessionRecord(getApplicationContext());
         ((AnalyticsApplication) getApplication()).setListeningActivity(this);
         ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
         sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
@@ -116,32 +124,10 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         DefaultAudioAnalysisPublisher.getInstance(getApplicationContext())
                 .register(this);
 
-
-        // run the metronome beat on a separate thread
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                synthesizer = new Synthesizer();
-
-                while(true){
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    playMetronome();
-                }
-            }
-        }).start();
+        commentHistory = cactusStore.load_comments_history();
 
     }
-    public void playMetronome() {
 
-        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
-        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
-
-    }
 
 
     @Override
@@ -153,6 +139,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         if (leaving) {
             this.finishPractice();
         }
+
 
     }
 
@@ -168,7 +155,6 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         boolean sentData = prefs.getBoolean("sentData", false);
 
         if (ended || sentData){
-//            sessionRecord = new DefaultSessionRecord(getApplicationContext());
             ((AnalyticsApplication) getApplication()).setListeningActivity(this);
 
             ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
@@ -183,9 +169,157 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         leaving = true;
     }
 
-    @Override
-    public void onBackPressed() {
-        // override onBackPressed to disable back button (by doing nothing)
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.notifications) {
+            System.out.println("HEY IM ACTUALLY USED *********");
+            displayNotifications(v);
+        }
+
+    }
+
+    void displayNotifications1(View v) {
+
+//        notificationsList = new ArrayList<>(Arrays.asList(
+//                "Muna Commented on POst", "Mags Commented on Post"));
+
+        DialogFragment newFragment = NotificationsFragment.newInstance(notificationsList);
+        newFragment.show(getFragmentManager(), "dialog");
+
+        System.out.println("TOKEN:" + prefs.getString("token", "default"));
+//        getNotifications();
+    }
+
+    void displayNotifications(View v) {
+
+        notificationsList.clear();
+
+
+        String request = "GET";
+        String requestAddress = "/api/recordings/recordingsWithNewComments";
+
+        SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
+            @Override
+            public void processFinish(ServerResponse serverResponse) {
+                if (serverResponse.getCode() < 400) {
+                    System.out.println("getNotifications response:" + serverResponse.getResponse());
+
+                    try {
+                        JSONObject cactusNameOBJ = serverResponse.getResponse();
+                        if (cactusNameOBJ != null) {
+                            JSONArray notList = (JSONArray) cactusNameOBJ.get("recordings");
+
+                            int i;
+                            int j;
+                            String str = null;
+
+                            for (i = 0; i < notList.length(); i++) {
+                                JSONObject elem = (JSONObject) notList.get(i);
+
+                                // get the title of the recording
+                                String title = elem.getString("description");
+
+                                // get all the comments
+                                JSONArray comments = (JSONArray) elem.get("comments");
+
+                                // loop through all the comments
+                                for (j = 0; j < comments.length(); j++) {
+
+                                    // get all the information from the actual comment
+                                    JSONObject specificNot = (JSONObject) comments.get(j);
+
+                                    String commentID = specificNot.getString("_id");
+                                    String contents = specificNot.getString("contents");
+                                    String whoCommented = specificNot.getString("commenterName");
+
+                                    // build the notification
+                                    str = ("Username " + whoCommented + " commented on your " +
+                                            "recording '" + title + "'. They said '" + contents + "'");
+
+                                    // if the commentID is not in the commentsHistory dictionary then add it
+                                    // else do not add it in twice
+                                    if (commentHistory != null){
+                                        System.out.println("YAYAYYAY THERES HISTORY");
+                                        if (!commentHistory.contains(commentID)) {
+                                            commentHistory.add(commentID);
+                                            notificationsList.add(str);
+                                        }
+                                    }else {
+                                        System.out.println("BOOOOO");
+                                        commentHistory.add(commentID);
+                                        notificationsList.add(str);
+                                    }
+                                }
+
+                            }
+
+                            // if no new notifications not save anything
+                            if (notificationsList.isEmpty()) {
+
+                                notificationsList = new ArrayList<>(Arrays.asList(
+                                        "You have no unread notifications!"));
+                            }
+                            else {
+                                System.out.println("LIST----:" + notificationsList.toString());
+                                // save the new comments to sharedPref
+                                cactusStore.save_comment_history(commentHistory);
+                            }
+
+                            System.out.println("notificationsList:**********************");
+                            System.out.println(notificationsList.toString());
+                            System.out.println("TOKEN:" + prefs.getString("token", "default"));
+
+                            DialogFragment newFragment = NotificationsFragment.newInstance(notificationsList);
+                            newFragment.show(getFragmentManager(), "dialog");
+
+
+                        }
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        sat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                request, requestAddress, null);
+    }
+
+
+    public void playMetronome() {
+        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.metronome);
+
+        // run the metronome beat on a separate thread
+        metronomeThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                synthesizer = new Synthesizer();
+                AudioGenerator audio = new AudioGenerator(7000);
+
+                double[] silence = audio.getSineWave(500, 7000, 0);
+
+                // fast is 2400
+                int noteDuration = 4000;
+                double frequency = 277.18;
+
+                double[] reNote = audio.getSineWave(noteDuration, 7000, frequency);
+
+                while(true){
+                    try {
+                        Thread.sleep(100);
+                        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        mPlayer.start();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
+        });
+
+        metronomeThread.start();
     }
 
     public void doExitSurvey() {
@@ -206,7 +340,13 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                     System.out.println("updateCactusName response:" + serverResponse.getResponse().toString());
 
                     try {
-                        cactusName = serverResponse.getResponse().get("cactusName").toString();
+                        JSONObject cactusNameOBJ = serverResponse.getResponse();
+                        if (cactusNameOBJ != null) {
+                            cactusName = cactusNameOBJ.get("cactusName").toString();
+                        }
+                        else {
+                            cactusName = null;
+                        }
                     }
                     catch (JSONException e) {
                         cactusName = null;
@@ -239,6 +379,8 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     public void updateCactusStore() {
 
+        System.out.println("Student ID *****:" + studentId);
+
         System.out.println("IN UPDATECACTUSSTORE");
         String request = "GET";
         String requestAddress = "/api/students/" + studentId;
@@ -251,7 +393,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
             SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
                 @Override
                 public void processFinish(ServerResponse serverResponse) {
-//                    System.out.println("response:" + serverResponse.getResponse());
+                    System.out.println("response:" + serverResponse.getResponse());
                     if (serverResponse.getCode() >= 400) {
                         System.out.println("Error retrieving student information");
                     } else {

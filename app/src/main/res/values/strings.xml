@@ -46,5 +46,10 @@
     <!--Settings Strings-->
     <string name="change_password_link"><u>Change Password</u></string>
     <string name="version_code">Version Code:</string>
+    <string name="title_activity_notifications_list">NotificationsListActivity</string>
+
+
+    <!-- Notifications Example-->
+    <string name="alert_dialog_two_buttons_title">Hello</string>
 
 </resources>

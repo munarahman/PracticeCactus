@@ -11,4 +11,5 @@
     <color name="positive_indicator">#3fb545</color>
     <color name="negative_indicator">#ff0000</color>
     <color name="colorAccent">#a94c37</color>
+    <color name="dialogColor">#ffffff</color>
 </resources>

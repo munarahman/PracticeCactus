@@ -17,6 +17,7 @@ import com.practicecactus.practicecactus.Activities.PracticeActivity;
 import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
+import com.practicecactus.practicecactus.Utils.AudioGenerator;
 import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.joda.time.DateTime;
@@ -72,7 +73,15 @@ public class Cactus implements AudioAnalysisListener{
         practiceLeft = cactusStore.load_practice_left();
         timeGoalReached = cactusStore.load_time_goal_reached();
 
-//        synthesizer = new Synthesizer();
+        AudioGenerator audio = new AudioGenerator(7000);
+
+        double[] silence = audio.getSineWave(500, 7000, 0);
+
+        // fast is 2400
+        int noteDuration = 6000;
+        double frequency = 155.56;
+
+        double[] reNote = audio.getSineWave(noteDuration, 7000, frequency);
 
     }
 

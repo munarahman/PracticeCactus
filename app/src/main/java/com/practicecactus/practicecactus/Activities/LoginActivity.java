@@ -56,12 +56,11 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println(" LOGIN ACTIVITY KEYS:*******************:");
         System.out.println(keys.toString());
 
-        System.out.println("t:" + prefs.getString("token", "default"));
-        System.out.println("TOKEN");
+        System.out.println("token:" + prefs.getString("token", "default"));
+
 //        if (prefs.contains("token") && prefs.contains("userId")) {
         if (prefs.contains("token")) {
             System.out.println("****** WHAT THE ******");
-            System.out.println("here");
             loginToApp();
         }
 

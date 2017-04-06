@@ -35,4 +35,12 @@
 
     <style name="AppFullScreenTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppNotifications" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/dialogColor</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+
+
 </resources>

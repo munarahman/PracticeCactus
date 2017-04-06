@@ -5,7 +5,10 @@ import android.content.SharedPreferences;
 
 import com.practicecactus.practicecactus.SessionRecord.SessionRecord;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Yuan on 3/14/2016.
@@ -28,8 +31,8 @@ public class CactusStore {
     private final String LATEST_HEARD = "latest_heard";
     private final String SESSION_LENGTH = "session_length";
     private final String SUGGESTION_ON = "suggestion_on";
-    private final String SESSIONRECORD = "sessionRecord";
     private final String ENROLLED = "enrolled";
+    private final String COMMENTS_HISTORY = "comments_history";
 
 
 //    public static CactusStore getInstance(Context AppContext, String setting_file_name){
@@ -130,6 +133,17 @@ public class CactusStore {
         editor.commit();
     }
 
+    public void save_comment_history(ArrayList<String> commentsHistory) {
+        SharedPreferences.Editor editor = this.settings.edit();
+
+        Set<String> set = new HashSet<String>();
+        set.addAll(commentsHistory);
+        editor.putStringSet(this.COMMENTS_HISTORY, set);
+
+        System.out.println("SAVING SET SIzE+++:" + set.size());
+        editor.commit();
+    }
+
     public String load_username(){
         String username = settings.getString(this.USERNAME, null);
         return username;
@@ -191,6 +205,24 @@ public class CactusStore {
 
     public boolean load_student_enrolled() {
         return settings.getBoolean(this.ENROLLED, false);
+
+    }
+
+
+    public ArrayList<String> load_comments_history() {
+        ArrayList<String> newList = new ArrayList<>();
+
+        Set<String> newSet = settings.getStringSet(this.COMMENTS_HISTORY, null);
+
+        System.out.println("STORED SET SIzE+++:" + newSet.size());
+
+        if (newSet != null){
+            newList.addAll(newSet);
+        }
+
+        return newList;
+
+
 
     }
 
