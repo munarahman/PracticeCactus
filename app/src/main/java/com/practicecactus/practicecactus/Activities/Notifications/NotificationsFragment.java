@@ -39,7 +39,6 @@ public class NotificationsFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         notificationsList = getArguments().getStringArrayList("list");
-//        System.out.println("LIST***:" + notificationsList);
 
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
     }
@@ -57,8 +56,8 @@ public class NotificationsFragment extends DialogFragment {
         ArrayList<String> listContact = notificationsList;
         ListView lv = (ListView) v.findViewById(R.id.whole_list);
 
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_expandable_list_item_1,
-                listContact);
+        adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.list_item, listContact);
 
         lv.setAdapter(adapter);
 

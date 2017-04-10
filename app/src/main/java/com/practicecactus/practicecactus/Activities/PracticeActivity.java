@@ -50,7 +50,6 @@ import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
 import com.practicecactus.practicecactus.Utils.AudioGenerator;
 import com.practicecactus.practicecactus.Utils.Metronome;
-import com.practicecactus.practicecactus.Utils.NotificationsList;
 import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -91,23 +90,32 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         previousIntent = getIntent();
+
+        // set the view
+        setContentView(R.layout.activity_practice);
+
+        // used for google analytics
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
+        // prevent the screen from going to sleep
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // get shared preferences
         prefs = this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
-        studentId = prefs.getString("studentId", null);
-        System.out.println("studentID:" + studentId);
-
-        setContentView(R.layout.activity_practice);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        // init a new cactus store and cactus
         cactus = new Cactus(PracticeActivity.this);
         cactusStore = new CactusStore(getApplicationContext(), studentId);
+
+
         offlineManager = OfflineManager.getInstance(this);
+
+        commentHistory = cactusStore.load_comments_history();
 
         soundSummary = new ArrayList<>();
 
@@ -124,8 +132,6 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
         DefaultAudioAnalysisPublisher.getInstance(getApplicationContext())
                 .register(this);
-
-        commentHistory = cactusStore.load_comments_history();
 
     }
 
@@ -170,27 +176,6 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         leaving = true;
     }
 
-//    public void onClick(View v) {
-//
-//        if (v.getId() == R.id.notifications) {
-//            System.out.println("HEY IM ACTUALLY USED *********");
-//            displayNotifications(v);
-//        }
-//
-//    }
-
-    void displayNotifications1(View v) {
-
-//        notificationsList = new ArrayList<>(Arrays.asList(
-//                "Muna Commented on POst", "Mags Commented on Post"));
-
-        DialogFragment newFragment = NotificationsFragment.newInstance(notificationsList);
-        newFragment.show(getFragmentManager(), "dialog");
-
-        System.out.println("TOKEN:" + prefs.getString("token", "default"));
-//        getNotifications();
-    }
-
 
     public void displayNotifications(View v) {
 
@@ -204,7 +189,6 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
             @Override
             public void processFinish(ServerResponse serverResponse) {
                 if (serverResponse.getCode() < 400) {
-                    System.out.println("getNotifications response:" + serverResponse.getResponse());
 
                     try {
                         JSONObject cactusNameOBJ = serverResponse.getResponse();
@@ -213,7 +197,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
                             int i;
                             int j;
-                            String str = null;
+                            String str;
 
                             for (i = 0; i < notList.length(); i++) {
                                 JSONObject elem = (JSONObject) notList.get(i);
@@ -235,19 +219,17 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                                     String whoCommented = specificNot.getString("commenterName");
 
                                     // build the notification
-                                    str = ("Username " + whoCommented + " commented on your " +
-                                            "recording '" + title + "'. They said '" + contents + "'");
+                                    str = whoCommented + " commented on: '" + title + "'\n'"
+                                            + contents + "'";
 
                                     // if the commentID is not in the commentsHistory dictionary then add it
                                     // else do not add it in twice
-                                    if (commentHistory != null){
-                                        System.out.println("YAYAYYAY THERES HISTORY");
+                                    if (commentHistory != null) {
                                         if (!commentHistory.contains(commentID)) {
                                             commentHistory.add(commentID);
                                             notificationsList.add(str);
                                         }
                                     }else {
-                                        System.out.println("BOOOOO");
                                         commentHistory.add(commentID);
                                         notificationsList.add(str);
                                     }
@@ -271,9 +253,6 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 //                                notificationsButton.setBackgroundResource(R.drawable.has_notifications);
                             }
 
-//                            System.out.println("notificationsList:**********************");
-//                            System.out.println(notificationsList.toString());
-//                            System.out.println("TOKEN:" + prefs.getString("token", "default"));
 
                             DialogFragment newFragment = NotificationsFragment.newInstance(notificationsList);
                             newFragment.show(getFragmentManager(), "dialog");
