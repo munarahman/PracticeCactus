@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import java.sql.SQLOutput;
-
 import com.practicecactus.practicecactus.AnalyticsApplication;
 import com.practicecactus.practicecactus.R;
 
@@ -22,17 +20,19 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
+        // get all the appropriate buttons
         Button community = (Button) findViewById(R.id.community_button);
         Button progress = (Button) findViewById(R.id.progress_button);
-        Button changePassword = (Button) findViewById(R.id.change_password_button);
         Button settings = (Button) findViewById(R.id.menu_settings);
         Button contact = (Button) findViewById(R.id.contact);
         Button logout = (Button) findViewById(R.id.logout);
         Button goBack = (Button) findViewById(R.id.go_back);
 
+        // set the listeners for each button
         community.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,13 +47,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(progressIntent);
             }
         });
-//        changePassword.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent passwordIntent = new Intent(getApplicationContext(), ChangePasswordActivity.class);
-//                startActivity(passwordIntent);
-//            }
-//        });
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,13 +97,22 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void signOut(){
+
+        // get shared prefs
         SharedPreferences prefs = this.getSharedPreferences("USER_SHAREDPREFERENCES", this.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+
+        // remove the token from shared prefs
         editor.remove("token");
         editor.clear();
         editor.apply();
 
-
+        /* set FLAG_ACTIVITY_NEW_TASK so that loginScreenIntent will become the start of a new task
+         * on this history stack.
+         *
+         * FLAG_ACTIVITY_CLEAR_TASK will cause any existing task that is with loginScreenIntent to
+         * be cleared before the activity is started.
+         */
 
         Intent loginScreenIntent = new Intent(this, LoginActivity.class);
         loginScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -33,13 +33,14 @@ public class CommunityActivity extends AppCompatActivity {
 
         offlineManager = OfflineManager.getInstance(this);
 
+        // get shared prefs
         SharedPreferences prefs = CommunityActivity.this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
         editor = prefs.edit();
 
+        // get the token
         String token = prefs.getString("token", null);
-
 
         String server_address = SERVER_ADDR + "/feed";
         String cookieString = "token=" + token;
@@ -48,6 +49,8 @@ public class CommunityActivity extends AppCompatActivity {
         cookieManager.setAcceptCookie(true);
         cookieManager.setCookie(server_address + "/", cookieString);
 
+        // this displays the webpage in a separate view
+        // all errors or changes for this page have to be done on the server side
         WebView webView = (WebView) this.findViewById(R.id.community_web_view);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(server_address);
@@ -60,6 +63,7 @@ public class CommunityActivity extends AppCompatActivity {
         super.onResume();
         analytics.trackScreen(this.getClass().getSimpleName());
 
+        // if sessionRecord info is already sent to server, start a new sessionRecord
         if (ended) {
             ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
@@ -72,28 +76,29 @@ public class CommunityActivity extends AppCompatActivity {
 
         /*
         * isFinishing() will be false if HOME button or the screen turns off.
-        * isFinishing() Will be t rue if BACK button is pressed
+        * isFinishing() Will be true if BACK button is pressed
         * */
 
+        // send the session data information to the server if home button is pressed from this page
         if (!this.isFinishing()){
-            System.out.println("leaving");
 
             // get the practice Activity and unregister it
             PracticeActivity activity = ((AnalyticsApplication) getApplication()).getListeningActivity();
             DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(activity);
 
+            // get the session Record
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
             CommonFunctions cf = new CommonFunctions();
             cf.finishPractice(sessionRecord, this, offlineManager);
 
             offlineManager.clearCache();
+
+            // set ended to true to start a new Session in PracticeActivity
             ended = true;
 
+            // save ended in sharedPref
             editor.putBoolean("sentData", ended);
             editor.commit();
-        }
-        else {
-            System.out.println("JOKES NOT LEAVING");
         }
     }
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.practicecactus.practicecactus.AnalyticsApplication;
 import com.practicecactus.practicecactus.AudioAnalysis.impl.DefaultAudioAnalysisPublisher;
@@ -20,13 +21,13 @@ import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
 import com.practicecactus.practicecactus.Utils.CommonFunctions;
 
+import java.util.HashMap;
+
 public class ContactActivity extends AppCompatActivity {
 
     private EditText messageEditText;
-    private Button submitButton;
-    private boolean isValid = true;
     private AnalyticsApplication analytics;
-
+    private CommonFunctions cf;
     private DefaultSessionRecord sessionRecord;
     private OfflineManager offlineManager;
     private boolean ended;
@@ -36,24 +37,29 @@ public class ContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
         offlineManager = OfflineManager.getInstance(this);
 
+        // get shared prefs
         SharedPreferences prefs = ContactActivity.this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
         editor = prefs.edit();
 
         messageEditText = ((EditText) findViewById(R.id.contact_message));
-        submitButton = (Button) findViewById(R.id.contact_submit_button);
+
+        Button submitButton = (Button) findViewById(R.id.contact_submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendContactMessage();
             }
         });
+
+        cf = new CommonFunctions();
 
         ended = false;
     }
@@ -63,6 +69,7 @@ public class ContactActivity extends AppCompatActivity {
         super.onResume();
         analytics.trackScreen(this.getClass().getSimpleName());
 
+        // if the session record info has already been sent, create a new session record
         if (ended) {
             ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
@@ -80,43 +87,56 @@ public class ContactActivity extends AppCompatActivity {
         * */
 
         if (!this.isFinishing()){
-            System.out.println("leaving");
 
             // get the practice Activity and unregister it
             PracticeActivity activity = ((AnalyticsApplication) getApplication()).getListeningActivity();
             DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(activity);
 
+            // get the session Record
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
             CommonFunctions cf = new CommonFunctions();
             cf.finishPractice(sessionRecord, this, offlineManager);
 
             offlineManager.clearCache();
+
+            // set ended to true to start a new Session in PracticeActivity
             ended = true;
 
+            // save it in sharedPref
             editor.putBoolean("sentData", ended);
             editor.commit();
-        }
-        else {
-            System.out.println("JOKES NOT LEAVING");
         }
     }
 
     private void sendContactMessage() {
+
+        // called when the user clicks on the submit button in the Contact page
+
+        HashMap<String, EditText> fields = new HashMap<>();
         String message = messageEditText.getText().toString();
 
-        checkEmpty(message, messageEditText);
+        fields.put(message, messageEditText);
+
+        // check that they are not empty
+        boolean isValid = cf.checkEmpty(fields);
+
 
         String request = "POST";
-        String requestAddress = "/api/contacts";
+        String requestAddress = getString(R.string.contact_server_call);
         String requestBody = "contents=" + message;
 
         if (isValid) {
             SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
                 @Override
                 public void processFinish(ServerResponse serverResponse) {
-                    if (serverResponse.getCode() >= 400) {
-                        System.out.println("Cannot send message.");
+                    if (serverResponse.getCode() > 400) {
+                        // display the error
+
+                        Toast.makeText(ContactActivity.this, R.string.contact_error,
+                                Toast.LENGTH_LONG).show();
                     } else {
+
+                        // create success dialog
                         AlertDialog.Builder builder = new AlertDialog.Builder(ContactActivity.this);
                         builder.setMessage("Message sent!")
                                 .setPositiveButton(R.string.ok,
@@ -135,10 +155,4 @@ public class ContactActivity extends AppCompatActivity {
         }
     }
 
-    private void checkEmpty(String field, EditText fieldEntry) {
-        if (field.isEmpty()) {
-            fieldEntry.setError("Missing field");
-            isValid = false;
-        }
-    }
 }

@@ -18,63 +18,52 @@ import com.practicecactus.practicecactus.AnalyticsApplication;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
+import com.practicecactus.practicecactus.Utils.CommonFunctions;
 
-import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.util.Map;
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
-
-    private String username;
-    private String password;
 
     private EditText usernameEditText;
     private EditText passwordEditText;
 
-    private Button loginButton;
-    private TextView signUpButton;
     private AnalyticsApplication analytics;
 
-    private boolean isValid = true;
     public static final int MY_PERMISSIONS_AUDIO_RECORD = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
         audioRecordPermissions();
 
-
-
+        // get the sharedPref
         SharedPreferences prefs = this.getSharedPreferences("USER_SHAREDPREFERENCES", this.MODE_PRIVATE);
 
-        Map<String,?> keys = prefs.getAll();
-        System.out.println(" LOGIN ACTIVITY KEYS:*******************:");
-        System.out.println(keys.toString());
-
-        System.out.println("token:" + prefs.getString("token", "default"));
-
-//        if (prefs.contains("token") && prefs.contains("userId")) {
+        // if the sharedPrefs already contains a token, then go straight to practice activity
         if (prefs.contains("token")) {
-            System.out.println("****** WHAT THE ******");
             loginToApp();
         }
 
+        // get the appropriate fields
         usernameEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
 
-        loginButton = (Button) findViewById(R.id.login_button);
-        signUpButton = (TextView) findViewById(R.id.sign_up);
+        Button loginButton = (Button) findViewById(R.id.login_button);
+        TextView signUpButton = (TextView) findViewById(R.id.sign_up);
 
+        // set listeners
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 studentLogin();
-                isValid = true;
             }
         });
         signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -94,25 +83,36 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void studentLogin() {
-        username = usernameEditText.getText().toString();
-        password = passwordEditText.getText().toString();
+        String username = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
 
-        checkEmpty(username, usernameEditText);
-        checkEmpty(password, passwordEditText);
+        // store all the values and their respective fields in a hasmap
+        CommonFunctions cf = new CommonFunctions();
+        HashMap<String, EditText> fields = new HashMap<>();
 
+        fields.put(username, usernameEditText);
+        fields.put(password, passwordEditText);
+
+        // isValid is false if any fields are empty
+        boolean isValid = cf.checkEmpty(fields);
+
+        // set the parameters for the request
         String request = "POST";
-        String requestAddress = "/auth/local";
+        String requestAddress = getString(R.string.login_server_call);
         String requestBody =
                 "username=" + username +
                 "&password=" + password +
                 "&requestedRole=student";
 
         if (isValid) {
+
+            // create a new SendApplication Task to send the sever request
             SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
                 @Override
                 public void processFinish(ServerResponse serverResponse) {
-                    System.out.println("CODE:" + serverResponse.getCode());
                     if (serverResponse.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+
+                        // display error message
                         passwordEditText.setError("Username and password do not match");
                     } else if (serverResponse.getCode() == 499) {
 
@@ -134,18 +134,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginToApp() {
+
+        // called in studentLogin()
+
         Intent practiceIntent = new Intent(getApplicationContext(), PracticeActivity.class);
         startActivity(practiceIntent);
     }
 
-    private void checkEmpty(String field, EditText fieldEntry) {
-        if (field.isEmpty()) {
-            fieldEntry.setError("Missing credentials");
-            isValid = false;
-        }
-    }
 
     private void audioRecordPermissions() {
+
+        // called onCreate
+
+        // ask user for permission to the phone's microphone
+
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,

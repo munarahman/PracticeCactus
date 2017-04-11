@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="617e4b40a2445f7c5ed4a36ca2d729d225cb9598">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_97fe90c1d736ee625f0995946cfaedaee4d624ce/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="/Users/Muna/Desktop/PracticeCactus/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_5078fba9758e3d776800318fb18a25a90146842c/classes.dex" />
+    </item>
+
+</items>

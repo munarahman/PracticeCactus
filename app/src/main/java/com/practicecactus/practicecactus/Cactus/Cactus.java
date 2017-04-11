@@ -7,24 +7,21 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.practicecactus.practicecactus.AudioAnalysis.AudioAnalysis;
 import com.practicecactus.practicecactus.AudioAnalysis.AudioAnalysisListener;
 import com.practicecactus.practicecactus.AudioAnalysis.impl.DefaultAudioAnalysisPublisher;
 import com.practicecactus.practicecactus.AudioAnalysis.impl.TemporalSmoother;
-import com.practicecactus.practicecactus.OfflineManager;
 import com.practicecactus.practicecactus.Activities.PracticeActivity;
 import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
-import com.practicecactus.practicecactus.Utils.AudioGenerator;
-import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.joda.time.Seconds;
 
-import java.text.SimpleDateFormat;
 
 /**
  * An object to act as a controller for the cactus pet
@@ -47,41 +44,32 @@ public class Cactus implements AudioAnalysisListener{
     private Long timeGoalReached;   // in milliseconds
     private boolean heardMusic = false;
     private DateTime lastTime = new DateTime();
-    private Synthesizer synthesizer;
 
-    OfflineManager offlineManager;
 
     public Cactus(PracticeActivity activity) {
         this.activity = activity;
         this.doingSurvey = false;
 
+        // get the shared prefs
         SharedPreferences prefs = activity.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
+
+        // get student ID
         studentId = prefs.getString("studentId", null);
 
         DefaultAudioAnalysisPublisher.getInstance(activity.getApplicationContext()).register(this);
         cactusStore = new CactusStore(activity.getApplicationContext(), studentId);
-        offlineManager = OfflineManager.getInstance(activity);
 
-
+        // init the mood, create a new cactus view
         this.mood = this.initMood();
         this.cactusView = new CactusView((ImageView) activity.findViewById(R.id.cactus_view));
         this.temporalSmoother = new TemporalSmoother();
 
+        // get useful variables
         moodView = (CactusMoodView) activity.findViewById(R.id.mood_bar);
         practiceGoal = cactusStore.load_practice_goal();
         practiceLeft = cactusStore.load_practice_left();
         timeGoalReached = cactusStore.load_time_goal_reached();
-
-        AudioGenerator audio = new AudioGenerator(7000);
-
-        double[] silence = audio.getSineWave(500, 7000, 0);
-
-        // fast is 2400
-        int noteDuration = 6000;
-        double frequency = 155.56;
-
-        double[] reNote = audio.getSineWave(noteDuration, 7000, frequency);
 
     }
 
@@ -99,12 +87,11 @@ public class Cactus implements AudioAnalysisListener{
     private float getMoodStep() {
         int targetSessionLength = cactusStore.load_session_length();
         if (targetSessionLength == 0) {
-//            return (float) 0.5 / (10000);
             return (float) 1 / (10000);
         }
+
         //mood step is set such that practice for targetSessionLength minutes increase the mood
         return (float) 1 / (targetSessionLength*60000);
-//        return (float) 0.5 / (targetSessionLength*60000);
     }
 
     private float initMood() {
@@ -120,21 +107,15 @@ public class Cactus implements AudioAnalysisListener{
         return this.mood;
     }
 
-    public void playMetronome() {
-
-        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
-        synthesizer.play(Synthesizer.Note0.F, 2, 2.0/4);
-
-    }
 
     @Override
     public void listenForAnalysis(AudioAnalysis analysis) {
         float newVal;
+
+        // get all the flags set for the screen for PracticeActivity
         int windowFlags = this.activity.getWindow().getAttributes().flags;
 
-//        playMetronome();
-
-
+        // if the sound is piano
         if ( this.temporalSmoother.smooth(analysis.isPiano())) {
 
             // if the flag to keep screen on is unset, set it
@@ -143,12 +124,15 @@ public class Cactus implements AudioAnalysisListener{
                 this.activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
             }
 
-
+            // if there was no last update then set it to now,
+            // else it is the current time
             if (lastUpdate == null) {
                 lastUpdate = new DateTime(analysis.getTime());
             } else {
+
                 DateTime currTime = new DateTime();
                 long msOfPractice = currTime.getMillis() - lastUpdate.getMillis();
+
                 newVal = this.mood + msOfPractice * moodStep;
                 this.mood = (newVal > 1) ? 1 : newVal;
                 lastUpdate = currTime;
@@ -168,7 +152,6 @@ public class Cactus implements AudioAnalysisListener{
 
                 // set heardMusic to true to indicate the cactus has heard music
                 heardMusic = true;
-                System.out.println("UPDATE: " + practiceGoal + " " + practiceLeft + " " + timeGoalReached);
             }
         } else {
 
@@ -182,9 +165,8 @@ public class Cactus implements AudioAnalysisListener{
 
 
             int secBetween = Seconds.secondsBetween(lastTime, new DateTime()).getSeconds();
-            System.out.println("NOT LISTENING:" + secBetween);
 
-            // 5 minutes with no playing, let go of control over screen.
+            // if it has been 5 minutes with no playing, let go of control over screen.
             if (secBetween >= 300) {
 
                 // if the flag to keep screen on is set, unset it
@@ -217,14 +199,12 @@ public class Cactus implements AudioAnalysisListener{
         moodStep = this.getMoodStep();
         practiceLeft = this.cactusStore.load_practice_left();
         timeGoalReached = this.cactusStore.load_time_goal_reached();
-        // use for debugging
-//        practiceLeft = 0L;
-//        timeGoalReached = 0L;
         DefaultAudioAnalysisPublisher.getInstance(this.activity.getApplicationContext()).register(this);
         this.initMood();
     }
 
     public void punch() {
+        // decrease mood if cactus is tapped
         double newVal = this.mood - 0.1;
         this.mood = (newVal > 0) ? (float) newVal : 0;
     }
@@ -240,14 +220,17 @@ public class Cactus implements AudioAnalysisListener{
 
     // reminder: auto posting is independent of cactus's state
     public void sendAutoPost() {
+
+        // set the parameters for the request
         String request = "POST";
         String requestAddress = "/api/practices/finish";
 
+        // create a new SendApplication Task to send the sever request
         SendApplicationTask sat = new SendApplicationTask(activity, new SendApplicationTask.AsyncResponse() {
             @Override
             public void processFinish(ServerResponse serverResponse) {
                 if (serverResponse.getCode() > 400) {
-                    System.out.println("failed to auto post");
+                    Toast.makeText(activity, R.string.failed_autopost_error, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -255,8 +238,9 @@ public class Cactus implements AudioAnalysisListener{
         sat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 request, requestAddress, null);
 
+        // create the success dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
-        builder.setMessage("Congratulations! You completed your daily practice goal. Please take a few moments to complete the following survey.")
+        builder.setMessage(R.string.success_autopost)
                 .setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

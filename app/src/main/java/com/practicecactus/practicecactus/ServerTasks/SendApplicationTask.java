@@ -3,12 +3,8 @@ package com.practicecactus.practicecactus.ServerTasks;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.widget.Toast;
-
-import com.practicecactus.practicecactus.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
-import java.sql.SQLOutput;
 
 import static com.practicecactus.practicecactus.Utils.Constants.SERVER_ADDR;
 
@@ -37,8 +32,6 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
     private HttpURLConnection conn = null;
     private Activity callingActivity;
     private AlertDialog.Builder builder;
-    private String userRole;
-    private String cactusName;
 
     public SendApplicationTask(Activity activity, AsyncResponse delegate) {
         this.callingActivity = activity;
@@ -57,9 +50,7 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
     @Override
     protected ServerResponse doInBackground(String... params) {
         sendRequest(params[0], params[1], params[2]);
-        ServerResponse serverResponse = new ServerResponse(responseCode, responseJSON);
-
-        return serverResponse;
+        return new ServerResponse(responseCode, responseJSON);
     }
 
     private void sendRequest(String request, String requestAddress, String requestBody) {
@@ -67,16 +58,16 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
         String retrieveData = "";
 
         // token not needed for logging in or creating an account
-        if (requestAddress == "/auth/local" || requestAddress == "/api/users") {
+        if (requestAddress.equals("/auth/local") || requestAddress.equals("/api/users")) {
             needToken = false;
         }
 
-        if (requestAddress == "/api/users/me") {
+        if (requestAddress.equals("/api/users/me")) {
             retrieveData = requestAddress;
         }
 
         String HTTPAddress = SERVER_ADDR + requestAddress;
-        System.out.println("sending " + request + " request to " + HTTPAddress);
+//        System.out.println("sending " + request + " request to " + HTTPAddress);
 
         try {
             URL url = new URL(HTTPAddress);
@@ -84,6 +75,7 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
             conn.setRequestMethod(request);
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
+            // if the user is logging in then get their token
             if (needToken) {
                 SharedPreferences prefs = this.callingActivity.getSharedPreferences(
                         "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
@@ -91,7 +83,7 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
                 conn.setRequestProperty("Authorization", "Bearer " + token);
             }
 
-            if (request == "POST" || request == "PUT") {
+            if (request.equals("POST") || request.equals("PUT")) {
                 conn.setDoOutput(true);
 
                 DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
@@ -117,7 +109,7 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
                         JSONObject json = new JSONObject(brOutput);
 
                         // save token and other user data only when logging in or creating a new account
-                        if (!needToken || retrieveData != "") {
+                        if (!needToken || !retrieveData.equals("")) {
                             savePreferences(json, retrieveData);
                         }
                         responseJSON = json;
@@ -147,7 +139,7 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
     private void savePreferences(JSONObject json, String retrieveData) {
         try {
             // if you are retrieving user data, make a GET request to the server with new token
-            if (retrieveData == "") {
+            if (retrieveData.equals("")) {
                 String token = (String) json.get("token");
 
                 // save token to shared preferences
@@ -157,25 +149,24 @@ public class SendApplicationTask extends AsyncTask<String, Void, ServerResponse>
                 editor.putString("token", token);
                 editor.apply();
 
+                // get all the users data
                 sendRequest("GET", "/api/users/me", null);
 
-            } else if (retrieveData == "/api/users/me") {
+            } else if (retrieveData.equals("/api/users/me")) {
+
                 // otherwise, save data from response into CactusStore
                 String userId = (String) json.get("_id");
-                userRole = (String) json.get("role");
+                String userRole = (String) json.get("role");
+                String cactusName = (json.isNull("cactusName")) ? null : (String) json.get("cactusName");
 
-                if (json.isNull("cactusName")) {
-                    cactusName = null;
-                }
-                else {
-                    cactusName = (String) json.get("cactusName");
-                }
 
                 // if a student is logging in, save their student and user ID
                 if (!userRole.equals("teacher") && !userRole.equals("user")) {
 
                     String studentId = (String) json.get("studentId");
-                    // save userId studentId to shared preferences
+
+
+                    // save userId studentId, cactusname, and userId to shared preferences
                     SharedPreferences.Editor editor = this.callingActivity.getSharedPreferences(
                             "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE).edit();
 

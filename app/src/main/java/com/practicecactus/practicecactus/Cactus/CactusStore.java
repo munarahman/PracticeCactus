@@ -3,8 +3,6 @@ package com.practicecactus.practicecactus.Cactus;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.practicecactus.practicecactus.SessionRecord.SessionRecord;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +13,6 @@ import java.util.Set;
  */
 public class CactusStore {
 
-//    private static CactusStore instance;
     private SharedPreferences settings;
 
     //define Constants:
@@ -28,32 +25,11 @@ public class CactusStore {
     private final String TIME_GOAL_REACHED = "time_goal_reached";
     private final String LATEST_MOOD = "latest_mood";
     private final String LATEST_PRACTICE = "latest_practice";
-    private final String LATEST_HEARD = "latest_heard";
     private final String SESSION_LENGTH = "session_length";
     private final String SUGGESTION_ON = "suggestion_on";
     private final String ENROLLED = "enrolled";
     private final String COMMENTS_HISTORY = "comments_history";
 
-
-//    public static CactusStore getInstance(Context AppContext, String setting_file_name){
-//        if (instance == null){
-//            instance = new CactusStore();
-//            instance.init(AppContext, setting_file_name);
-//        }
-//        return instance;
-//    }
-//
-//    public static CactusStore getInstance(Context AppContext){
-//        if (instance == null){
-//            instance = new CactusStore();
-//            instance.init(AppContext, "DEFAULT");
-//        }
-//        return instance;
-//    }
-//
-//    public void init(Context appContext, String setting_file_name){
-//        this.settings = appContext.getSharedPreferences(setting_file_name, 0);
-//    }
 
     public CactusStore(Context appContext, String setting_file_name) {
         this.settings = appContext.getSharedPreferences(setting_file_name, 0);
@@ -117,10 +93,6 @@ public class CactusStore {
         save_time(latest_practice, LATEST_PRACTICE);
     }
 
-    public void save_last_time_music_heard(Date latest_time){
-        save_time(latest_time, LATEST_HEARD);
-    }
-
     public void save_suggestion_on(boolean suggestion_on) {
         SharedPreferences.Editor editor = this.settings.edit();
         editor.putBoolean(this.SUGGESTION_ON, suggestion_on);
@@ -134,6 +106,10 @@ public class CactusStore {
     }
 
     public void save_comment_history(ArrayList<String> commentsHistory) {
+
+        // convert the list passed in as a set then save it to sharedPrefs
+        // this is because sharedPrefs can save a set but not an array
+
         SharedPreferences.Editor editor = this.settings.edit();
 
         Set<String> set = new HashSet<String>();
@@ -144,62 +120,48 @@ public class CactusStore {
     }
 
     public String load_username(){
-        String username = settings.getString(this.USERNAME, null);
-        return username;
+        return settings.getString(this.USERNAME, null);
     }
 
     public String load_cactusName() {
-        String cactusName = settings.getString(this.CACTUSNAME, null);
-        return cactusName;
+        return settings.getString(this.CACTUSNAME, null);
     }
 
     public String load_name(){
-        String nickname = settings.getString(this.NICKNAME, null);
-        return nickname;
+        return settings.getString(this.NICKNAME, null);
     }
 
     public String load_grade() {
-        String grade = settings.getString(this.GRADE, null);
-        return grade;
+        return settings.getString(this.GRADE, null);
     }
 
     public Long load_practice_goal() {
-        Long goal = settings.getLong(this.PRACTICE_GOAL, 6000000);
-        return goal;
+        // set the default time for all new users to 100 minutes for practice goal
+        return settings.getLong(this.PRACTICE_GOAL, 6000000);
     }
 
     public Long load_practice_left() {
-        Long practice_left = settings.getLong(this.PRACTICE_LEFT, load_practice_goal());
-        return practice_left;
+        return settings.getLong(this.PRACTICE_LEFT, load_practice_goal());
     }
 
     public Long load_time_goal_reached() {
-        Long time_goal_reached = settings.getLong(this.TIME_GOAL_REACHED, 0L);
-        return time_goal_reached;
+        return settings.getLong(this.TIME_GOAL_REACHED, 0L);
     }
 
     public float load_latest_mood(){
-        float latest_mood = settings.getFloat(this.LATEST_MOOD, 0);
-        return latest_mood;
+        return settings.getFloat(this.LATEST_MOOD, 0);
     }
 
     public int load_session_length(){
-        int session_length = settings.getInt(this.SESSION_LENGTH, 5);
-        return session_length;
+        return settings.getInt(this.SESSION_LENGTH, 5);
     }
 
     public Date load_last_mood_time(){
-        Date last_mood_time = load_time(this.LATEST_PRACTICE);
-        return last_mood_time;
-    }
-    public Date load_last_time_music_heard(){
-        Date last_time_music_heard = load_time(this.LATEST_HEARD);
-        return last_time_music_heard;
+        return load_time(this.LATEST_PRACTICE);
     }
 
     public boolean load_suggestion_on() {
-        boolean suggestion_on = settings.getBoolean(this.SUGGESTION_ON, false);
-        return suggestion_on;
+        return settings.getBoolean(this.SUGGESTION_ON, false);
     }
 
     public boolean load_student_enrolled() {
@@ -209,6 +171,9 @@ public class CactusStore {
 
 
     public ArrayList<String> load_comments_history() {
+
+        // get the set from sharedprefs then convert it back to an array
+
         ArrayList<String> newList = new ArrayList<>();
 
         Set<String> newSet = settings.getStringSet(this.COMMENTS_HISTORY, null);
@@ -218,9 +183,6 @@ public class CactusStore {
         }
 
         return newList;
-
-
-
     }
 
     private void save_time(Date time, String key) {
@@ -241,8 +203,6 @@ public class CactusStore {
         long curr_time_long = curr_time.getTime();
         long time_millis = settings.getLong(key, curr_time_long);
 
-        Date date_time = new Date(time_millis);
-
-        return date_time;
+        return new Date(time_millis);
     }
 }

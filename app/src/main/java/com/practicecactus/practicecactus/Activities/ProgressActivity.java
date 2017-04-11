@@ -1,11 +1,9 @@
 package com.practicecactus.practicecactus.Activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
 
@@ -29,19 +27,22 @@ public class ProgressActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_progress);
+
+
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
         offlineManager = OfflineManager.getInstance(this);
 
+        // get shared prefs
         SharedPreferences prefs = ProgressActivity.this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
         editor = prefs.edit();
 
+
+        // get the token and studentID
         String token = prefs.getString("token", null);
         String studentId = prefs.getString("studentId", null);
 
@@ -52,11 +53,12 @@ public class ProgressActivity extends AppCompatActivity {
         cookieManager.setAcceptCookie(true);
         cookieManager.setCookie(server_address + "/", cookieString);
 
+        // this displays the webpage in a separate view
+        // all errors or changes for this page have to be done on the server side
         WebView webView = (WebView) this.findViewById(R.id.progress_web_view);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(server_address);
 
-//        webView.loadUrl("http://a.bestmetronome.com/");
         ended = false;
     }
 
@@ -65,13 +67,12 @@ public class ProgressActivity extends AppCompatActivity {
         super.onResume();
         analytics.trackScreen(this.getClass().getSimpleName());
 
+        // if sessionRecord info is already sent to server, start a new sessionRecord
         if (ended) {
             ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
         }
 
-//        sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
-//        System.out.println("progress resume start time:" + sessionRecord.get_start_time());
     }
 
     @Override
@@ -85,24 +86,24 @@ public class ProgressActivity extends AppCompatActivity {
         * */
 
         if (!this.isFinishing()){
-            System.out.println("leaving");
 
             // get the practice Activity and unregister it
             PracticeActivity activity = ((AnalyticsApplication) getApplication()).getListeningActivity();
             DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(activity);
 
+            // get the session Record
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
             CommonFunctions cf = new CommonFunctions();
             cf.finishPractice(sessionRecord, this, offlineManager);
 
             offlineManager.clearCache();
+
+            // set ended to true to start a new Session in PracticeActivity
             ended = true;
 
+            // save ended in sharedPref
             editor.putBoolean("sentData", ended);
             editor.commit();
-        }
-        else {
-            System.out.println("JOKES NOT LEAVING");
         }
     }
 }

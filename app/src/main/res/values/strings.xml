@@ -24,19 +24,44 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="sign_up"><u>Sign Up</u></string>
+    <string name="ok">OK</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="sign_up"><u>Sign Up</u></string>
-    <string name="ok">OK</string>
-    <string name="not_enrolled">Sorry, you have not been enrolled by your teacher yet.</string>
     <string name="not_student">This is currently the student portal only. Please visit URL for
         the teacher portal.</string>
+
+    <!-- UpdateCactusStore() network error -->
+    <string name="student_network_error">Error retrieving student information</string>
+
+    <!-- UpdatedCactusName() network error -->
+    <string name="user_network_error">Error retrieving user information: Cactus Name</string>
+
+    <!-- toShare(), toPracticeList() not enrolled error -->
+    <string name="not_enrolled">Sorry, you have not been enrolled by your teacher yet.</string>
+
+    <!-- toPracticeList() not enabled error -->
+    <string name="not_enabled">Your teacher has not enabled this yet.</string>
+    <string name="practice_list_network_error">Could not fetch new practice suggestion</string>
+    <string name="practice_suggestion_network_error">Error sending practice suggestion feedback</string>
+
+    <!-- sendContactMessage error -->
+    <string name="contact_error">Cannot send message.</string>
+
+    <!-- resetPracticeList(), cannot reset practice list-->
+    <string name="failed_reset_error">Could not reset practice list</string>
+
+    <!-- sendAutoPost() -->
+    <string name="failed_autopost_error">failed to Auto Post</string>
+    <string name="success_autopost">Congratulations! You completed your daily practice goal.
+        Please take a few moments to complete the following survey.</string>
+
 
     <!-- Internet connectivity -->
     <string name="not_connected">No internet connection</string>
     <string name="offline_recordings">No internet connection. The audio recording has been saved and will be sent later.</string>
-    <string name="change_password_success">Successfully changed password.</string>
+
 
     <string name="shared_preferences_user">com.practicecactus.user</string>
     <string name="title_activity_practice_list">PracticeListActivity</string>
@@ -45,11 +70,25 @@
 
     <!--Settings Strings-->
     <string name="change_password_link"><u>Change Password</u></string>
+    <string name="change_password_success">Successfully changed password.</string>
     <string name="version_code">Version Code:</string>
-    <string name="title_activity_notifications_list">NotificationsListActivity</string>
 
+    <!--Server Requests-->
+    <string name="get_server_Request">GET</string>
+    <string name="post_server_Request">POST</string>
 
-    <!-- Notifications Example-->
-    <string name="alert_dialog_two_buttons_title">Hello</string>
+    <!--API Calls-->
+`   <string name="notifications_server_call">/api/recordings/recordingsWithNewComments</string>
+    <string name="user_info_server_call">/api/users/me</string>
+    <string name="student_info_server_call">/api/students/</string>
+    <string name="practice_list_server_call">/api/suggestions/fetch</string>
+    <string name="practice_suggestions_server_call">/api/suggestions/feedback</string>
+    <string name="change_password_server_call">/api/users/password</string>
+    <string name="contact_server_call">/api/contacts</string>
+    <string name="new_user_server_call">/api/users</string>
+    <string name="reset_practice_list_server_call">/api/suggestions/reset</string>
+    <string name="login_server_call">"/auth/local"</string>
+    <string name="autopost_server_call">/api/practices/finish</string>
+
 
 </resources>

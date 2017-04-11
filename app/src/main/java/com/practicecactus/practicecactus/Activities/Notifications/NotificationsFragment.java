@@ -11,7 +11,6 @@ import android.widget.ListView;
 import com.practicecactus.practicecactus.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Muna on 2017-04-06.
@@ -24,6 +23,8 @@ public class NotificationsFragment extends DialogFragment {
     ArrayList<String> notificationsList;
 
     public static NotificationsFragment newInstance(ArrayList<String> notificationsList) {
+
+        // this static function creates a new instance of the class and passes in the list as an argument
 
         NotificationsFragment frag = new NotificationsFragment();
 
@@ -38,6 +39,7 @@ public class NotificationsFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // set notificationsList to be equal to the list of new notifications sent by the server
         notificationsList = getArguments().getStringArrayList("list");
 
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
@@ -49,31 +51,23 @@ public class NotificationsFragment extends DialogFragment {
 
         super.onCreateView(inflater, container, savedInstanceState);
 
+        // set the dialogs title
         getDialog().setTitle("Notifications");
 
+        // inflate the view to be notifications_fragment
         View v = inflater.inflate(R.layout.notifications_fragment, container, false);
 
-        ArrayList<String> listContact = notificationsList;
+        // get the listView in the notifications_fragment
         ListView lv = (ListView) v.findViewById(R.id.whole_list);
 
+        // set an adapter to the listview so it pulls each cells data from notificationsList
         adapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item, listContact);
+                R.layout.list_item, notificationsList);
 
         lv.setAdapter(adapter);
 
-
+        // return the view
         return v;
     }
 
-
-    private ArrayList<String> GetlistContact(){
-
-        ArrayList<String> contactlist = new ArrayList<String>();
-
-        contactlist.add("Topher");
-        contactlist.add("Jean");
-        contactlist.add("Andrew");
-
-        return contactlist;
-    }
 }

@@ -2,35 +2,23 @@ package com.practicecactus.practicecactus.Activities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import android.app.AlertDialog;
 import android.app.DialogFragment;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,9 +36,6 @@ import com.practicecactus.practicecactus.R;
 import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
-import com.practicecactus.practicecactus.Utils.AudioGenerator;
-import com.practicecactus.practicecactus.Utils.Metronome;
-import com.practicecactus.practicecactus.Utils.Synthesizer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
@@ -76,17 +61,15 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     private AnalyticsApplication analytics;
     private String eventCategory = this.getClass().getSimpleName();
     private String cactusName;
-    private MediaPlayer mPlayer;
+    private String request;
+    private String requestAddress;
 
     public boolean leaving;
     public OfflineManager offlineManager;
     private SharedPreferences prefs;
-    private Thread metronomeThread;
-    private Synthesizer synthesizer;
 
     private ArrayList<String> notificationsList = new ArrayList<>();
     private ArrayList<String> commentHistory = new ArrayList<>();
-    Button notificationsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,14 +91,20 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         prefs = this.getSharedPreferences(
                 "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE);
 
+        studentId = prefs.getString("studentId", null);
+
         // init a new cactus store and cactus
         cactus = new Cactus(PracticeActivity.this);
         cactusStore = new CactusStore(getApplicationContext(), studentId);
 
-
         offlineManager = OfflineManager.getInstance(this);
 
+        // load the comments History Array from the cactus store
         commentHistory = cactusStore.load_comments_history();
+
+        // get the textViews of the greeting text and cactus name
+        greeting_text = (TextView) findViewById(R.id.greeting_text);
+        activity_cactus_name = (TextView) findViewById(R.id.activity_cactus_name);
 
         soundSummary = new ArrayList<>();
 
@@ -127,22 +116,22 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
 
 
-        greeting_text = (TextView) findViewById(R.id.greeting_text);
-        activity_cactus_name = (TextView) findViewById(R.id.activity_cactus_name);
-
         DefaultAudioAnalysisPublisher.getInstance(getApplicationContext())
                 .register(this);
 
     }
 
-
-
     @Override
     protected void onPause() {
+
+        // called whenever the user leaves this activity
+
         super.onPause();
         this.cactus.pause();
+
         DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(this);
 
+        // if the user is leaving this page, send a practice report to server
         if (leaving) {
             this.finishPractice();
         }
@@ -152,6 +141,10 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     @Override
     protected void onResume() {
+
+        // called whenever the app returns to this activity
+        // onCreate and onResume will always both be called the first time an Activity is started.
+
         super.onResume();
         updateCactusStore();
 
@@ -159,47 +152,68 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
         this.cactus.resume();
 
+        // this tracks whether or not the currently stored practice report has been
+        // sent from another activity
         boolean sentData = prefs.getBoolean("sentData", false);
 
+        // if the practice report has been sent to the server then start a new session
         if (ended || sentData){
             ((AnalyticsApplication) getApplication()).setListeningActivity(this);
 
+            // create a new sessionRecord if the previous session report has been sent to the server
             ((AnalyticsApplication) getApplication()).createNewSessionRecord(getApplicationContext());
             sessionRecord = ((AnalyticsApplication) getApplication()).getSessionRecord();
             ended = false;
         }
 
-        System.out.println("practice resume start time:" + sessionRecord.get_start_time());
-
         analytics.trackScreen(this.getClass().getSimpleName());
 
+        // leaving marks that the user is leaving from PracticeActivity and onPause if leaving
+        // is set to true, then a practice report will be sent to the server
         leaving = true;
     }
 
+    @Override
+    public void listenForAnalysis(AudioAnalysis analysis) {
+        float[] thisSegment = analysis.getFFTSound();
+
+        float mean = 0;
+        for (float f : thisSegment){
+            mean += f/thisSegment.length;
+        }
+
+        soundSummary.add(mean);
+    }
 
     public void displayNotifications(View v) {
 
+        // This function gets called every time the user clicks on the bell image on top left corner
+
+
+        // clear the notifications list
         notificationsList.clear();
 
+        // set the server information for this API call
+        request = getString(R.string.get_server_Request);
+        requestAddress = getString(R.string.notifications_server_call);
 
-        String request = "GET";
-        String requestAddress = "/api/recordings/recordingsWithNewComments";
-
+        // create a new SendApplication Task to send the sever request
         SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
             @Override
             public void processFinish(ServerResponse serverResponse) {
-                if (serverResponse.getCode() < 400) {
+
+                String str;
+
+                if (serverResponse.getCode() == 200) {
 
                     try {
+                        // get the server response
                         JSONObject cactusNameOBJ = serverResponse.getResponse();
+
                         if (cactusNameOBJ != null) {
                             JSONArray notList = (JSONArray) cactusNameOBJ.get("recordings");
 
-                            int i;
-                            int j;
-                            String str;
-
-                            for (i = 0; i < notList.length(); i++) {
+                            for (int i = 0; i < notList.length(); i++) {
                                 JSONObject elem = (JSONObject) notList.get(i);
 
                                 // get the title of the recording
@@ -209,7 +223,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                                 JSONArray comments = (JSONArray) elem.get("comments");
 
                                 // loop through all the comments
-                                for (j = 0; j < comments.length(); j++) {
+                                for (int j = 0; j < comments.length(); j++) {
 
                                     // get all the information from the actual comment
                                     JSONObject specificNot = (JSONObject) comments.get(j);
@@ -222,7 +236,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                                     str = whoCommented + " commented on: '" + title + "'\n'"
                                             + contents + "'";
 
-                                    // if the commentID is not in the commentsHistory dictionary then add it
+                                    // if commentID is not in commentsHistory dictionary then add it
                                     // else do not add it in twice
                                     if (commentHistory != null) {
                                         if (!commentHistory.contains(commentID)) {
@@ -237,23 +251,20 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
                             }
 
-                            // if no new notifications not save anything
+                            // if no new notifications don't save the comment History
                             if (notificationsList.isEmpty()) {
 
                                 notificationsList = new ArrayList<>(Arrays.asList(
                                         "You have no unread notifications!"));
-//                                notificationsButton.setBackgroundResource(R.drawable.has_notifications);
                             }
                             else {
 
                                 // save the new comments to sharedPref
                                 cactusStore.save_comment_history(commentHistory);
-
-                                notificationsButton = (Button)findViewById(R.id.notifications);
-//                                notificationsButton.setBackgroundResource(R.drawable.has_notifications);
                             }
 
 
+                            // create a new DialogFragment to display the notifications
                             DialogFragment newFragment = NotificationsFragment.newInstance(notificationsList);
                             newFragment.show(getFragmentManager(), "dialog");
 
@@ -267,87 +278,63 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
             }
         });
 
+        // send the task
         sat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 request, requestAddress, null);
     }
 
-
-    public void playMetronome() {
-        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.metronome);
-
-        // run the metronome beat on a separate thread
-        metronomeThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                synthesizer = new Synthesizer();
-                AudioGenerator audio = new AudioGenerator(7000);
-
-                double[] silence = audio.getSineWave(500, 7000, 0);
-
-                // fast is 2400
-                int noteDuration = 4000;
-                double frequency = 277.18;
-
-                double[] reNote = audio.getSineWave(noteDuration, 7000, frequency);
-
-                while(true){
-                    try {
-                        Thread.sleep(100);
-                        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mPlayer.start();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                }
-            }
-        });
-
-        metronomeThread.start();
-    }
-
     public void doExitSurvey() {
+
+        // this function is called in the Cactus.java when the student has met their daily practice goal
+
         leaving = false;
+
         Intent exitSurveyIntent = new Intent(PracticeActivity.this, ExitSurveyActivity.class);
         startActivity(exitSurveyIntent);
     }
 
     public String updateCactusName(final SharedPreferences.Editor editor) {
 
-        String request = "GET";
-        String requestAddress = "/api/users/me";
+        // this function gets called once inside of updateCactusStore
 
+        request = getString(R.string.get_server_Request);
+        requestAddress = getString(R.string.user_info_server_call);
+
+        System.out.println("token:" + prefs.getString("token", "default"));
+
+        // create a new SendApplication Task to send the sever request
         SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
             @Override
             public void processFinish(ServerResponse serverResponse) {
-                if (serverResponse.getCode() < 400) {
-//                    System.out.println("updateCactusName response:" + serverResponse.getResponse().toString());
-
+                if (serverResponse.getCode() == 200) {
                     try {
+
+                        // get the response
                         JSONObject cactusNameOBJ = serverResponse.getResponse();
-                        if (cactusNameOBJ != null) {
-                            cactusName = cactusNameOBJ.get("cactusName").toString();
-                        }
-                        else {
-                            cactusName = null;
-                        }
+
+                        // if an object was sent back, then get the name of the cactus
+                        // else set the value to null
+                        cactusName = ((cactusNameOBJ != null) ? cactusNameOBJ.get("cactusName").toString() : null);
                     }
                     catch (JSONException e) {
                         cactusName = null;
                     }
+                } else {
+                    Toast.makeText(PracticeActivity.this, R.string.user_network_error,
+                                Toast.LENGTH_LONG).show();
                 }
 
-                if (cactusName != "null") {
+
+                // if cactusName does not equal "null" then store the cactus name in sharedPrefs
+                if (editor != null && !cactusName.equals("null")) {
                     editor.putString("cactusName", cactusName);
                     editor.apply();
-                }
-                else {
+                } else {
                     cactusName = null;
                 }
 
-
-//                System.out.println("CACTUSNAME in FUnc:" + cactusName);
+                // since this task is asynchronous, update the textView when it comes with the new cactus name
+                // and save the new cactus name
                 if (cactusName != null && !serverResponse.getResponse().isNull("cactusName")) {
                     activity_cactus_name.setText(cactusName);
                     cactusStore.save_cactusName(cactusName);
@@ -364,31 +351,37 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     public void updateCactusStore() {
 
-        System.out.println("Student ID *****:" + studentId);
+        // gets called every time the onResume function is called
 
-        System.out.println("IN UPDATECACTUSSTORE");
-        String request = "GET";
-        String requestAddress = "/api/students/" + studentId;
+        request = getString(R.string.get_server_Request);
+        requestAddress = getString(R.string.student_info_server_call) + studentId;
 
+        System.out.println("***addr:" + requestAddress);
+
+
+        // if there is an internet connection
         if (offlineManager.networkAvailable()) {
 
+            // get the editor for shared prefs
             final SharedPreferences.Editor newEditor = this.getSharedPreferences(
                     "USER_SHAREDPREFERENCES", Context.MODE_PRIVATE).edit();
 
+            // create a new SendApplication Task to send the sever request
             SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
                 @Override
                 public void processFinish(ServerResponse serverResponse) {
-                    System.out.println("response:" + serverResponse.getResponse());
-                    if (serverResponse.getCode() >= 400) {
-                        System.out.println("Error retrieving student information");
+
+                    // if we get a 500 error then there was an error with server
+                    System.out.println("code:" + serverResponse.getCode());
+                    if (serverResponse.getCode() > 400) {
+
+                        if (studentId != null) {
+                            Toast.makeText(PracticeActivity.this, R.string.student_network_error,
+                                    Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         try {
                             JSONObject json = serverResponse.getResponse();
-
-                            cactusStore.save_username(getJsonString(json, "username"));
-                            cactusStore.save_name(getJsonString(json, "name"));
-                            cactusStore.save_grade(getJsonString(json, "grade"));
-                            cactusStore.save_suggestion_on((boolean) json.get("suggestionOn"));
 
                             // get the ID of the teacher, null if student not enrolled
                             String teacherExistsStr = getJsonString(json, "teacher");
@@ -399,55 +392,58 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
                                 teacherExists = false;
                             }
 
-                            System.out.println("teacherExists:" + teacherExists);
-                            cactusStore.save_student_enrolled(teacherExists);
+                            // get the practice goal the teacher has set for student (in milliseconds)
+                            Long newGoal = Long.valueOf((int) json.get("desired_practice_time") * 60 * 1000);
 
+                            // save all the student info
+                            cactusStore.save_username(getJsonString(json, "username"));
+                            cactusStore.save_name(getJsonString(json, "name"));
+                            cactusStore.save_grade(getJsonString(json, "grade"));
+                            cactusStore.save_suggestion_on((boolean) json.get("suggestionOn"));
+                            cactusStore.save_student_enrolled(teacherExists);
+                            cactusStore.save_practice_goal(newGoal);
 
                             // get cactusName from shared Prefs and save it in Cactus Store
                             String newCactusName = updateCactusName(newEditor);
 
-
-                            Long newGoal = Long.valueOf((int) json.get("desired_practice_time") * 60 * 1000);
-                            System.out.println("+++++NEW GOAL:" + newGoal);
+                            // get the practice goal and how much practice is left
                             Long oldGoal = cactusStore.load_practice_goal();
                             Long practiceLeft = cactusStore.load_practice_left();
-                            cactusStore.save_practice_goal(newGoal);
 
-
-                            if (oldGoal != newGoal) {
+                            /* if the old goal and the new goal are not the same then
+                            *      subtract the practice left from the old goal to get amount practiced
+                            *      subtract the recent practice goal from  the amount practiced
+                            *      save this value as the updated practice left
+                            */
+                            if (!oldGoal.equals(newGoal)) {
 
                                 int amountPracticed = (int) (oldGoal - practiceLeft);
-
-                                System.out.println("++++OLD GOAL:" + oldGoal);
-                                System.out.println("++++PRACTICE LEFT:" + practiceLeft);
                                 long newPracticeLeft = newGoal - amountPracticed;
-//                                cactusStore.save_practice_left(newPracticeLeft);
+
                                 cactus.setPracticeLeft(newPracticeLeft);
                                 cactus.setPracticeGoal(newGoal);
                             }
 
-
-
                             // when creating new account, student has not practiced yet
                             if (previousIntent.getStringExtra("newAccount") != null) {
-                                System.out.println("*********I'M A NEW ACCOUNT: setting new goal");
                                 cactusStore.save_practice_left(newGoal);
+
+                                // 0L means the number zero of type long
                                 cactusStore.save_time_goal_reached(0L);
                             }
 
-                            String usrname = cactusStore.load_username();
+                            username = cactusStore.load_username();
 
-                            if (!"".equals(usrname) && teacherExists) {
-                                greeting_text.setText("Hello " + usrname + "!");
+                            if (!"".equals(username) && teacherExists) {
+                                greeting_text.setText("Hello " + username + "!");
                             }
 
                             if (newCactusName != null && !"null".equals(newCactusName)) {
-//                                System.out.println("SETTING CACTUS NAME");
-//                                System.out.println("newCactusName:" + newCactusName);
                                 activity_cactus_name.setText(newCactusName);
 
                             }
 
+                            // if the teacher has enabled practice list on the web portal, show it
                             if (cactusStore.load_suggestion_on()) {
                                 findViewById(R.id.button_practice_list).setVisibility(Button.VISIBLE);
                             }
@@ -465,6 +461,10 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     }
 
     private String getJsonString(JSONObject json, String fieldName) {
+
+        // called whenever we have a response from server and we want to get variable from server
+        // return the field if it is not null
+
         try {
             if (!json.isNull(fieldName)) {
                 return (String) json.get(fieldName);
@@ -477,19 +477,10 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         return null;
     }
 
-    @Override
-    public void listenForAnalysis(AudioAnalysis analysis) {
-        float[] thisSegment = analysis.getFFTSound();
-
-        float mean = 0;
-        for (float f : thisSegment){
-            mean += f/thisSegment.length;
-        }
-
-        soundSummary.add(mean);
-    }
-
     public void onMenuPressed(View view) {
+
+        // called whenever the sun menu (top right hand corner) is tapped
+
         leaving = false;
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
@@ -497,12 +488,15 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
 
     public void toShare(View view){
 
-        // if student doesnt have a teacher; dont allow them to share
+        // called whenever the shared button is pressed
+
+        // if student doesnt have a teacher; don't allow them to share
         if (!cactusStore.load_student_enrolled()) {
             Toast.makeText(PracticeActivity.this, R.string.not_enrolled, Toast.LENGTH_LONG).show();
         }
         else {
 
+            // stop the cactus from listening, and start new ShareActivity
             leaving = false;
             DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).unregister(this);
             DefaultAudioAnalysisPublisher.getInstance(getApplicationContext()).pause();
@@ -514,35 +508,49 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     }
 
     public void toPracticeList(View view) {
+
+        // called whenever the practiceList button is pressed
+
         analytics.trackEvent(eventCategory, "PracticeListGetFirst");
 
+        // if no internet connection, notify the user
         if (!offlineManager.networkAvailable()) {
+
+            // create an alert
             AlertDialog.Builder notConnected = new AlertDialog.Builder(this);
             notConnected.setMessage(R.string.not_connected)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                         }
                     })
                     .show();
 
         } else {
-            String request = "GET";
-            String requestAddress = "/api/suggestions/fetch";
+            request = getString(R.string.get_server_Request);
+            requestAddress = getString(R.string.practice_list_server_call);
 
+            // create a new SendApplication Task to send the sever request
             SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
                 @Override
                 public void processFinish(ServerResponse serverResponse) {
-                    if (serverResponse.getCode() < 400) {
+                    if (serverResponse.getCode() == 200) {
+
+                        // everything is okay
                         practiceSuggestion = serverResponse.getResponse();
-                        displaySuggestion(practiceSuggestion);
+                        displaySuggestion();
                     } else if (serverResponse.getCode() == 404) {
-                        Toast.makeText(PracticeActivity.this, "Your teacher has not enabled this yet.", Toast.LENGTH_LONG).show();
+
+                        // teacher has not enabled this feature for this student
+                        Toast.makeText(PracticeActivity.this, R.string.not_enabled, Toast.LENGTH_LONG).show();
                     } else if (serverResponse.getCode() == 444) {
+
+                        // student is not yet enrolled by teacher
                         Toast.makeText(PracticeActivity.this, R.string.not_enrolled, Toast.LENGTH_LONG).show();
                     } else {
-                        System.out.println("Could not fetch new practice suggestion");
+
+                        // server error
+                        Toast.makeText(PracticeActivity.this, R.string.practice_list_network_error, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -552,7 +560,10 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         }
     }
 
-    private void displaySuggestion(JSONObject practiceSuggestion) {
+    private void displaySuggestion() {
+
+        // called when a valid practiceList JSONObject is sent back from server in toPracticeList()
+
         String suggestion = "";
 
         try {
@@ -592,6 +603,7 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
         suggestionView.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/FreeSerif.ttf"));
         suggestionView.setText(suggestion);
 
+        // create the dialog that displays each practice suggestion
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setView(suggestionView)
@@ -626,6 +638,10 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     }
 
     private void buttonSettings(Button button) {
+
+        // called in displaySuggestion() to style the passed in button
+
+
         button.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Quivira.otf"));
         button.setTextSize(28);
 
@@ -643,17 +659,20 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     }
 
     private void sendFeedback(boolean isGood) {
-        String request = "POST";
-        String requestAddress = "/api/suggestions/feedback";
-        String requestBody =
-                "isGood=" + isGood +
-                        "&suggestion=" + practiceSuggestion;
 
+        // called whenever student clicks the thumbs up button to a practice list item
+
+        String request = "POST";
+        requestAddress = getString(R.string.practice_suggestions_server_call);
+        String requestBody = "isGood=" + isGood + "&suggestion=" + practiceSuggestion;
+
+        // create a new SendApplication Task to send the sever request
         SendApplicationTask sat = new SendApplicationTask(this, new SendApplicationTask.AsyncResponse() {
             @Override
             public void processFinish(ServerResponse serverResponse) {
                 if(serverResponse.getCode() >= 400) {
-                    System.out.println("Error sending practice suggestion feedback");
+                    Toast.makeText(PracticeActivity.this, R.string.practice_suggestion_network_error,
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -663,36 +682,50 @@ public class PracticeActivity extends AppCompatActivity implements AudioAnalysis
     }
 
     public void punchCactus(View view) {
+
+        // this function is called everytime the cactus is tapped
+
+
+        // mood is made sadder whenever the cactus is tapped
         this.cactus.punch();
         analytics.trackEvent("PunchCactus", String.valueOf(cactus.getMood()));
     }
 
     public void finishPractice() {
+
+        // this function is called in the onPause() function
+
+        // it sends the current session data to the server and displayed in the Progress tab
+
+        // set ended to true indicating a new sessionRecord has to be created
         ended = true;
 
+        // end the current session
         sessionRecord.end_session();
         int[] pianoKeyCount = sessionRecord.get_piano_key_count();
         String keyCountString = "";
 
+        // get all the notes played
         for (int value : pianoKeyCount) {
             keyCountString += String.valueOf(value) + ",";
         }
 
+        // if the amount of piano time played (in milliseconds) is not 0, send the data
         if (sessionRecord.get_piano_time() / 1000 > 0) {
 
+            // create a new practiceSession object
             PracticeSession session = new PracticeSession(this,
                     String.valueOf(sessionRecord.get_piano_time() / 1000),
                     String.valueOf(sessionRecord.get_start_time()),
                     String.valueOf(sessionRecord.get_end_time()),
+
                     // get rid of the last comma
                     keyCountString.substring(0, keyCountString.length() - 1)
             );
 
-            System.out.println("PIANO TIME IN PRACTICE: " + sessionRecord.get_piano_time());
-
+            // send the session to the offline manager in case the network is interrupted
             offlineManager.sendFileAttempt(session);
         }
 
-        System.out.println("practice finishPractice start time:" + sessionRecord.get_start_time());
     }
 }

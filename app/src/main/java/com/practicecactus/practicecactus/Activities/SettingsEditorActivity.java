@@ -25,9 +25,7 @@ import com.practicecactus.practicecactus.ServerTasks.SendApplicationTask;
 import com.practicecactus.practicecactus.ServerTasks.ServerResponse;
 import com.practicecactus.practicecactus.BuildConfig;
 import com.practicecactus.practicecactus.SessionRecord.impl.DefaultSessionRecord;
-import com.practicecactus.practicecactus.Utils.AudioGenerator;
 import com.practicecactus.practicecactus.Utils.CommonFunctions;
-import com.practicecactus.practicecactus.Utils.Metronome;
 
 public class SettingsEditorActivity extends AppCompatActivity {
     private CactusStore preferences;

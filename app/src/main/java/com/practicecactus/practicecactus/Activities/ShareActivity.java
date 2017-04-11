@@ -63,23 +63,24 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    // init the media variables
     private MediaPlayer mPlayer = null;
     private MediaRecorder mRecorder = null;
     private Handler mHandler = null;
-    private String username = null;
-
     private boolean mStartRecording = true;
     private boolean mStartPlaying = true;
+    private SeekBar mSeekBar;
 
     private TextView record_activity_header_text;
 
+    // init the main Buttons on the Share Page
     private Button shareButton;
     private Button playbackButton;
     private Button recordButton;
 
-    OfflineManager manager;
+    private String username = null;
 
-    private SeekBar mSeekBar;
+    OfflineManager manager;
 
     private AnalyticsApplication analytics;
     private String eventCategory = this.getClass().getSimpleName();
@@ -88,11 +89,14 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
+
         analytics = (AnalyticsApplication) getApplication();
         analytics.getDefaultTracker();
 
+        // get an offline manager
         manager = OfflineManager.getInstance(this);
 
+        // get the buttons on share Page
         shareButton = (Button) findViewById(R.id.button_share_recording);
         playbackButton = (Button) findViewById(R.id.button_play_recording);
         recordButton = (Button) findViewById(R.id.button_record_stop);
@@ -116,14 +120,23 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+
+        // call the appropriate functions when certain buttons are pressed
+
         switch (v.getId()) {
             case R.id.button_record_stop:
+                // start recording
                 onRecord(mStartRecording);
+
+                // toggle startRecording
                 mStartRecording = !mStartRecording;
                 break;
 
             case R.id.button_play_recording:
+                // start playing playback
                 onPlay(mStartPlaying);
+
+                // toggle startPlaying
                 mStartPlaying = !mStartPlaying;
                 break;
 
@@ -143,7 +156,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
         record_activity_header_text = (TextView) findViewById(R.id.share_text_view);
 
         if (start) {
-            // if not currently recording
+            // if not currently recording, start recording
             startRecording();
 
             record_activity_header_text.setText("Record and Share: Recording ...");
@@ -152,11 +165,12 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
             recordButton.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
             recordButton.setText("Stop");
 
+            // disable the record button while it is recording
             temporarilyDisableRecordButton(recordButton);
             actionButtonsEnabled(false);
 
         } else {
-            // if currently recording
+            // if currently recording stop recording
             stopRecording();
 
             record_activity_header_text.setText("Record and Share: Ready to share.");
@@ -180,10 +194,12 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
             mPlayer = null;
         }
 
+        // create new file
         Long now = System.currentTimeMillis();
         mFileName = mDirName.getPath() + File.separator + now + ".3pg";
         File mediaFile = new File(mFileName);
 
+        // set up the media player
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -194,10 +210,10 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
 
         mSeekBar.setEnabled(false);
 
+        // start recording
         try {
             mRecorder.prepare();
             mRecorder.start();
-            System.out.println("started recording");
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -251,6 +267,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
     private void startPlaying() {
         analytics.trackEvent(eventCategory, "StartPlaying");
 
+        // if no media player exists then create one
         if (mPlayer == null) {
             mPlayer = new MediaPlayer();
             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -260,6 +277,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
                 }
             });
 
+            // when a recording has finished playing
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mPlayer) {
@@ -267,7 +285,6 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
                     mPlayer.seekTo(0);
                     showPlayButton();
                     nonPlayButtonsEnabled(true);
-                    System.out.println("Completed playing audio recording");
                 }
             });
 
@@ -275,9 +292,8 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
                 mPlayer.setDataSource(mFileName);
                 mPlayer.prepare();
             } catch (IOException e) {
-                System.out.println("ioexception");
+                e.printStackTrace();
             } catch (IllegalArgumentException e) {
-                System.out.println("illegalargumentexception");
                 e.printStackTrace();
             }
         }
@@ -285,6 +301,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
         mPlayer.seekTo(mSeekBar.getProgress() * 100);
         mPlayer.start();
 
+        // once the play button is pressed, show the pause button
         nonPlayButtonsEnabled(false);
         playbackButton.setText("Pause");
         playbackButton.setCompoundDrawablesWithIntrinsicBounds(null, null,
@@ -472,6 +489,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
     private void configureAudioFile() {
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+        // ask for permission for use of external storage
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
@@ -481,6 +499,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
             );
         }
 
+        // create a new directory in the external storage to store the recording
         mDirName = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MUSIC), "PracticeCactus");
 
@@ -492,6 +511,9 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private String getPref(String preference) {
+
+        // get the preference passed in from sharedPrefs
+
         SharedPreferences sharedPref = this.getSharedPreferences(
                 this.getString(R.string.shared_preferences_user),
                 Context.MODE_PRIVATE);
@@ -506,6 +528,7 @@ public class ShareActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onInfo(MediaRecorder mr, int what, int extra) {
 
+        // create an error message if the recording is too long, or has exceeded the max file size
         String msg = null;
         switch (what) {
             case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
